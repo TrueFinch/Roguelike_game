@@ -6,8 +6,9 @@
 #include <cstring>
 #include "../include/UserInterface.h"
 
-int MainMenu::update(int key) { //default is -1
+ui::GameState ui::MainMenu::update(int key) {
   clear();
+  ui::GameState new_state = MAIN_MENU;
   int max_height = 0, max_width = 0;
   getmaxyx(stdscr, max_height, max_width);
   switch (key) {
@@ -30,18 +31,5 @@ int MainMenu::update(int key) { //default is -1
     }
     mvprintw(max_height / 2 + i, (int) ((max_width - menu_items_[i].size()) / 2) + 1, "%s\n", menu_items_[i].c_str());
   }
-  return 0;
-}
-
-UserInterface::UserInterface(int rows, int cols) : rows_{rows}, cols_{cols} {
-  initscr();
-  clear();
-  keypad(stdscr, true);
-  noecho();
-  curs_set(0);
-  resize_term(rows, cols);
-}
-
-int UserInterface::update(int key) {
-  main_menu_.update(key);
+  return new_state;
 }

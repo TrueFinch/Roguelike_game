@@ -4,6 +4,8 @@ set(CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_CXX_FLAGS "-lncurses")
 
+include_directories(include)
+
 add_executable(Roguelike source/main.cpp include/Game.h source/Game.cpp include/UserInterface.h source/UserInterface.cpp)
 
 set(CURSES_NEED_NCURSES TRUE)

@@ -6,22 +6,30 @@
 #include <ncurses.h>
 #include "../include/Game.h"
 
-using namespace game_space;
-
-Game::Game(int rows, int cols) : rows_{rows}, cols_{cols} {
-  this->ui_ = UserInterface(rows, cols);
+game_space::Game::Game(int rows, int cols) : rows_{rows}, cols_{cols} {
+  initscr();
+  clear();
+  keypad(stdscr, true);
+  noecho();
+  curs_set(0);
+  resize_term(rows, cols);
 }
 
-int Game::start() {
+void game_space::Game::start() {
   int key = -1;
-  ui_.update(key);
+  game_state = main_menu_.update(key);
 
-  while(true) {
+  while (true) {
     key = getch();
     if (key == KEY_ESC) {
       break;
     }
-    ui_.update(key);
+    main_menu_.update(key);
   }
+  finish();
+}
+
+void game_space::Game::finish() {
+  endwin();
 }
 

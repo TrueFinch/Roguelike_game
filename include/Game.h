@@ -13,9 +13,11 @@ class Game {
  public:
   Game() = default;
   Game(int rows, int cols);
-  int start();
+  void start();
+  void finish();
  private:
-  UserInterface ui_;
+  ui::GameState game_state = ui::MAIN_MENU;
+  ui::MainMenu main_menu_ = ui::MainMenu();
   int rows_ = 0, cols_ = 0;
 };
 

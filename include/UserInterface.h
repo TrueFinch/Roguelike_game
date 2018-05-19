@@ -8,31 +8,29 @@
 #include <string>
 #include <vector>
 
+namespace ui {
+
+#define KEY_ENT 10
 #define KEY_ESC 27
+
+enum GameState { MAIN_MENU = 1, EXIT};
 
 class Screen {
  public:
   Screen() = default;
-  virtual int update(int key) = 0;
+  virtual GameState update(int key) = 0;
   ~Screen() = default;
 };
 
 class MainMenu : Screen {
  public:
-  int update(int key) override;
+  MainMenu() = default;
+  GameState update(int key) override;
  private:
   std::vector<std::string> menu_items_{"NEW GAME", "SETTINGS", "EXIT"};
   int chosen_ = 0;
 };
 
-class UserInterface {
- public:
-  UserInterface() = default;
-  UserInterface(int rows, int cols);
-  int update(int key);
- private:
-  int rows_ = 0, cols_ = 0;
-  MainMenu main_menu_;
-};
+} // namespace ui
 
 #endif //ROGUELIKE_USERINTERFACE_H
