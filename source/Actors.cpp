@@ -44,18 +44,6 @@ char actors::Actor::getDsymbol() const {
   return dsymbol_;
 }
 
-actors::Hero::Hero(int damage, int mana, int health, actors::Point coord) {
-  damage_points_ = damage;
-  max_mana_points_ = mana;
-  cur_mana_points_ = mana;
-  max_health_points_ = health;
-  cur_health_points_ = health;
-  coord_ = coord;
-  lsymbol_ = '@';
-  is_dead_ = false;
-  is_immortal_ = false;
-}
-
 void actors::Actor::setMaxHP(int hp) {
   max_health_points_ = hp;
 }
@@ -94,6 +82,26 @@ void actors::Actor::setDamagePoints(int d) {
 
 int actors::Actor::getDamagePoints() {
   return damage_points_;
+}
+
+bool actors::Actor::isDead() const {
+  return is_dead_;
+}
+
+bool actors::Actor::isImmortal() const {
+  return is_immortal_;
+}
+
+actors::Hero::Hero(int damage, int mana, int health, actors::Point coord) {
+  damage_points_ = damage;
+  max_mana_points_ = mana;
+  cur_mana_points_ = mana;
+  max_health_points_ = health;
+  cur_health_points_ = health;
+  coord_ = coord;
+  lsymbol_ = '@';
+  is_dead_ = false;
+  is_immortal_ = false;
 }
 
 void actors::Hero::collide(actors::Actor& _ca) {

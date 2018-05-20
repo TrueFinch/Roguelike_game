@@ -45,8 +45,9 @@ class Actor {
   void setDamagePoints(int);
   int getDamagePoints();
   bool isDead() const;
-  void collide(Actor&);
-  void collide(Hero&);
+  bool isImmortal() const;
+  virtual void collide(Actor&) = 0;
+  virtual void collide(Hero&) = 0;
 //  virtual void collide(const Princess&) = 0;
 //  virtual void collide(const Zombie&) = 0;
 //  virtual void collide(const Dragon&) = 0;
