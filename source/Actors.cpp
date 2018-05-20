@@ -100,6 +100,7 @@ actors::Hero::Hero(int damage, int mana, int health, actors::Point coord) {
   cur_health_points_ = health;
   coord_ = coord;
   lsymbol_ = '@';
+  dsymbol_ = '~';
   is_dead_ = false;
   is_immortal_ = false;
 }
@@ -110,9 +111,37 @@ void actors::Hero::collide(actors::Actor& _ca) {
 
 void actors::Hero::collide(actors::Hero& _ch) {}
 
+void actors::Hero::collide(actors::Zombie& _cz) {
+  setCurHP(getCurHP() - _cz.getDamagePoints());
+  _cz.setCurHP(_cz.getCurHP() - getDamagePoints());
+}
+
 void actors::Hero::collide(actors::Wall& _cw) {
   _cw.setCurHP(_cw.getCurHP() - getDamagePoints());
 }
+
+actors::Zombie::Zombie(int damage, int health, actors::Point coord) {
+  damage_points_ = damage;
+  max_health_points_ = health;
+  cur_health_points_ = health;
+  coord_ = coord;
+  lsymbol_ = 'z';
+  dsymbol_ = '+';
+  is_dead_ = false;
+  is_immortal_ = false;
+}
+
+void actors::Zombie::collide(actors::Actor& _ca) {
+  _ca.collide(*this);
+}
+
+void actors::Zombie::collide(actors::Hero& _ch) {
+  _ch.collide(*this);
+}
+
+void actors::Zombie::collide(actors::Zombie& _cz) {}
+
+void actors::Zombie::collide(actors::Wall& _cv) {}
 
 actors::Wall::Wall(int health, actors::Point coord) {
   max_health_points_ = health;
@@ -128,6 +157,10 @@ void actors::Wall::collide(actors::Actor& _ca) {
 
 void actors::Wall::collide(actors::Hero& _ch) {
   _ch.collide(*this);
+}
+
+void actors::Wall::collide(actors::Zombie& _cz) {
+  _cz.collide(*this);
 }
 
 void actors::Wall::collide(actors::Wall&) {}

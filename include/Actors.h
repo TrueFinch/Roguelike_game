@@ -14,7 +14,6 @@ class Zombie;
 class Dragon;
 class Wall;
 
-
 #define EPS 2e-15
 
 struct Point {
@@ -49,7 +48,7 @@ class Actor {
   virtual void collide(Actor&) = 0;
   virtual void collide(Hero&) = 0;
 //  virtual void collide(const Princess&) = 0;
-//  virtual void collide(const Zombie&) = 0;
+  virtual void collide(Zombie&) = 0;
 //  virtual void collide(const Dragon&) = 0;
 //  virtual void collide(const PassiveActor&) = 0;
   virtual void collide(Wall&) = 0;
@@ -57,15 +56,16 @@ class Actor {
 //  virtual void collide(const HealthP&) = 0;
 //  virtual void collide(const ManaP&) = 0;
  protected:
-  int damage_points_  = 0;
+  int damage_points_ = 0;
   int cur_mana_points_ = 0;
   int max_mana_points_ = 0;
   int cur_health_points_ = 0;
   int max_health_points_ = 0;
+  int visibility = 0;
   char lsymbol_ = '$';
   char dsymbol_ = '$';
   bool is_dead_ = false;
-  bool is_immortal_  = false;
+  bool is_immortal_ = false;
   Point coord_ = {0, 0};
 };
 
@@ -73,20 +73,21 @@ class Hero : Actor {
  public:
   Hero() = default;
   Hero(int damage, int mana, int health, Point coord);
-  void setMaxHP(int) override;
-  int getMaxHP() const override;
-  void setCurHP(int) override;
-  int getCurHP() const override;
-  void setMaxMP(int) override;
-  int getMaxMP() const override;
-  void setCurMP(int) override;
-  int getCurMP() const override;
-  void setDamagePoints(int) override;
-  int getDamagePoints() override;
-  bool isDead() const override;
   void collide(Actor&) override;
   void collide(Hero&) override;
+  void collide(Zombie&) override;
   void collide(Wall&) override;
+};
+
+class Zombie : Actor {
+ public:
+  Zombie() = default;
+  Zombie(int damage, int health, Point coord);
+  void collide(Actor&) override;
+  void collide(Hero&) override;
+  void collide(Zombie&) override;
+  void collide(Wall&) override;
+
 };
 
 class Wall : Actor {
@@ -95,6 +96,7 @@ class Wall : Actor {
   Wall(int health, Point coord);
   void collide(Actor&) override;
   void collide(Hero&) override;
+  void collide(Zombie&) override;  
   void collide(Wall&) override;
 };
 } // namespace actors
