@@ -5,7 +5,13 @@
 #ifndef ROGUELIKE_ACTOR_H
 #define ROGUELIKE_ACTOR_H
 
+#include <memory>
+#include <map>
+#include <string>
+
 namespace actors {
+
+enum ActorID {HERO_ID = 0, PRINCESS_ID, ZOMBIE_ID, DRAGON_ID, WALL_ID};
 
 class Actor;
 class Hero;
@@ -55,6 +61,7 @@ class Actor {
 //  virtual void collide(const Potion&) = 0;
 //  virtual void collide(const HealthP&) = 0;
 //  virtual void collide(const ManaP&) = 0;
+    static std::shared_ptr<actors::Actor> createActor(actors::ActorID id, std::map<char, int> args);
  protected:
   int damage_points_ = 0;
   int cur_mana_points_ = 0;

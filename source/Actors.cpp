@@ -4,6 +4,7 @@
 
 #include <Actors.h>
 #include <cmath>
+#include <assert.h>
 
 actors::Point::Point() {
   this->x = 42.0;
@@ -90,6 +91,25 @@ bool actors::Actor::isDead() const {
 
 bool actors::Actor::isImmortal() const {
   return is_immortal_;
+}
+
+std::shared_ptr<actors::Actor> actors::Actor::createActor(actors::ActorID id, std::map<char, int> args) {
+  std::shared_ptr<actors::Actor> ptr;
+
+  switch(id) {
+    case ActorID::HERO_ID:
+      ptr = std::make_shared(Hero(args['D'], args['M'], args['H'], {args['X'], args['Y']}));
+      break;
+    case ZOMBIE_ID:
+      ptr = std::make_shared(Zombie(args['D'], args['H'], {args['X'], args['Y']}));
+      break;
+    case WALL_ID:
+      ptr = std::make_shared(Wall(args['H'], {args['X'], args['Y']}));
+      break;
+    default:
+      assert(false);
+  }
+  return ptr;
 }
 
 actors::Hero::Hero(int damage, int mana, int health, actors::Point coord) {
