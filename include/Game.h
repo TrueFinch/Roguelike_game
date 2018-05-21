@@ -6,6 +6,8 @@
 #define ROGUELIKE_GAME_H
 
 #include "UserInterface.h"
+#include <Actors.h>
+#include <Map.h>
 
 namespace game_space {
 
@@ -19,6 +21,8 @@ class Game {
   ui::GameState game_state = ui::MAIN_MENU;
   ui::MainMenu main_menu_ = ui::MainMenu();
   int rows_ = 0, cols_ = 0;
+  std::vector<actors::Actor&> monsters_;
+  actors::Actor& hero_;
 };
 
 } //namespace game_space
