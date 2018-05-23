@@ -13,13 +13,21 @@ namespace ui {
 #define KEY_ENT 10
 #define KEY_ESC 27
 
-enum GameState { MAIN_MENU = 1, EXIT};
+enum GameState { LOADING = 0, MAIN_MENU, GAME_FIELD, SETTINGS, EXIT};
 
 class Screen {
  public:
   Screen() = default;
   virtual GameState update(int key) = 0;
   ~Screen() = default;
+};
+
+class Loading: Screen {
+ public:
+  Loading() = default;
+  GameState update(int key) override;
+ private:
+  std::string greeting_msg_ = "WELCOME TO MY ROGUELIKE GAME";
 };
 
 class MainMenu : Screen {
