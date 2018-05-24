@@ -18,11 +18,11 @@ class Game {
   void start();
   void finish();
  private:
-  ui::GameState game_state = ui::MAIN_MENU;
-  ui::MainMenu main_menu_ = ui::MainMenu();
+  ui::GameState game_state_;
+  ui::Loading loading_;
+  ui::MainMenu main_menu_;
+  map::Map map_;
   int rows_ = 0, cols_ = 0;
-  std::vector<actors::Actor&> monsters_;
-  actors::Actor& hero_;
 };
 
 } //namespace game_space
