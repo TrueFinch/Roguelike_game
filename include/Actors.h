@@ -106,6 +106,7 @@ class Wall : Actor {
   void collide(Zombie&) override;  
   void collide(Wall&) override;
 };
+
 } // namespace actors
 
 #endif //ROGUELIKE_ACTOR_H

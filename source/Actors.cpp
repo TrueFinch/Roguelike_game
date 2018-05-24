@@ -4,7 +4,7 @@
 
 #include <Actors.h>
 #include <cmath>
-#include <assert.h>
+#include <cassert>
 
 actors::Point::Point() {
   this->x = 42.0;
@@ -98,13 +98,13 @@ std::shared_ptr<actors::Actor> actors::Actor::createActor(actors::ActorID id, st
 
   switch(id) {
     case ActorID::HERO_ID:
-      ptr = std::make_shared(Hero(args['D'], args['M'], args['H'], {args['X'], args['Y']}));
+      ptr = std::make_shared<actors::Actor>(actors::Hero(args['D'], args['M'], args['H'], {(double)args['R'], (double)args['C']}));
       break;
-    case ZOMBIE_ID:
-      ptr = std::make_shared(Zombie(args['D'], args['H'], {args['X'], args['Y']}));
+    case ActorID::ZOMBIE_ID:
+      ptr = std::make_shared<actors::Actor>(Zombie(args['D'], args['H'], {(double)args['R'], (double)args['C']}));
       break;
-    case WALL_ID:
-      ptr = std::make_shared(Wall(args['H'], {args['X'], args['Y']}));
+    case ActorID::WALL_ID:
+      ptr = std::make_shared<actors::Actor>(Wall(args['H'], {(double)args['R'], (double)args['C']}));
       break;
     default:
       assert(false);
