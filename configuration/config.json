@@ -1,0 +1,48 @@
+{
+  "Actors": {
+    "Hero": {
+      "damage_points_": 21,
+      "max_mana_points_": 50,
+      "max_health_points_": 100,
+      "visibility": 10,
+      "undead_symbol_": "@",
+      "dead_symbol_": "~",
+      "is_dead_": false,
+      "is_immortal_": false
+    },
+    "Princess": {
+      "max_mana_points_": 150,
+      "visibility": 30,
+      "undead_symbol_": "*",
+      "is_dead_": false,
+      "is_immortal_": true
+    },
+    "Zombie": {
+      "damage_points_": 5,
+      "max_mana_points_": 0,
+      "max_health_points_": 50,
+      "visibility": 4,
+      "undead_symbol_": "z",
+      "dead_symbol_": "+",
+      "is_dead_": false,
+      "is_immortal_": false
+    },
+    "Dragon": {
+      "damage_points_": 100,
+      "max_mana_points_": 300,
+      "max_health_points_": 400,
+      "visibility": 25,
+      "undead_symbol_": "D",
+      "dead_symbol_": "+",
+      "is_dead_": false,
+      "is_immortal_": false
+    },
+    "Wall": {
+      "max_health_points_": 10000,
+      "undead_symbol_": "#",
+      "dead_symbol_": "_",
+      "is_dead_": false,
+      "is_immortal_": false
+    }
+  }
+}
