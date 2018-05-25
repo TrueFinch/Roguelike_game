@@ -13,17 +13,18 @@ ui::GameState ui::Loading::update(int key) {
   int max_rows = 0, max_cols = 0;
   getmaxyx(stdscr, max_rows, max_cols);
   switch (key) {
+    case KEY_ENT:
+      new_state = ui::MAIN_MENU;
+      break;
     case KEY_ESC:
       new_state = ui::EXIT;
       break;
-    case -1:
-      mvwprintw(stdscr, max_rows / 2, (max_cols - (int) greeting_msg_.length()) / 2, "%s", greeting_msg_);
-      mvwprintw(stdscr, max_rows - 1, 0, "Press any key to continue or ESCAPE to exit");
-      break;
     default:
-      new_state = ui::MAIN_MENU;
+      mvwprintw(stdscr, max_rows / 2, (max_cols - (int) greeting_msg_.length()) / 2, "%s", greeting_msg_.c_str());
+      mvwprintw(stdscr, max_rows - 1, 0, "Press ENTER to continue or ESCAPE to exit");
       break;
   }
+  refresh();
   return new_state;
 }
 
@@ -66,5 +67,18 @@ ui::GameState ui::MainMenu::update(int key) {
     }
     mvprintw(max_rows / 2 + i, (int) ((max_cols - menu_items_[i].size()) / 2) + 1, "%s\n", menu_items_[i].c_str());
   }
+  refresh();
+  return new_state;
+}
+
+ui::GameState ui::GameField::update(int key) {
+  clear();
+  ui::GameState new_state = ui::GAME_FIELD;
+  int max_rows = 0, max_cols = 0;
+  getmaxyx(stdscr, max_rows, max_cols);
+  switch (key) {
+    case KEY_ESC:
+  }
+
   return new_state;
 }

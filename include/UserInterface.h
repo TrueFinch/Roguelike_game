@@ -13,7 +13,7 @@ namespace ui {
 #define KEY_ENT 10
 #define KEY_ESC 27
 
-enum GameState { LOADING = 0, MAIN_MENU, GAME_FIELD, SETTINGS, EXIT};
+enum GameState { LOADING = 0, MAIN_MENU, SETTINGS, EXIT, GAME_FIELD, PAUSE};
 
 class Screen {
  public:
@@ -22,7 +22,7 @@ class Screen {
   ~Screen() = default;
 };
 
-class Loading: Screen {
+class Loading: public Screen {
  public:
   Loading() = default;
   GameState update(int key) override;
@@ -30,13 +30,26 @@ class Loading: Screen {
   std::string greeting_msg_ = "WELCOME TO MY ROGUELIKE GAME";
 };
 
-class MainMenu : Screen {
+class MainMenu : public Screen {
  public:
   MainMenu() = default;
   GameState update(int key) override;
  private:
   std::vector<std::string> menu_items_{"NEW GAME", "SETTINGS", "EXIT"};
   int chosen_ = 0;
+};
+
+class GameField : public Screen {
+ public:
+  GameField() = default;
+  GameState update(int key) override;
+ private:
+  std::vector<std::string> map_;
+  int damage_points_ = 0;
+  int cur_mana_points_ = 0;
+  int max_mana_points_ = 0;
+  int cur_health_points_ = 0;
+  int max_health_points_ = 0;
 };
 
 } // namespace ui
