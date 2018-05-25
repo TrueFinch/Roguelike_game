@@ -98,13 +98,13 @@ std::shared_ptr<actors::Actor> actors::Actor::createActor(actors::ActorID id, st
 
   switch(id) {
     case ActorID::HERO_ID:
-      ptr = std::make_shared<actors::Actor>(actors::Hero(args['D'], args['M'], args['H'], {(double)args['R'], (double)args['C']}));
+      ptr = std::make_shared<actors::Hero>(actors::Hero(args['D'], args['M'], args['H'], {(double)args['R'], (double)args['C']}));
       break;
     case ActorID::ZOMBIE_ID:
-      ptr = std::make_shared<actors::Actor>(Zombie(args['D'], args['H'], {(double)args['R'], (double)args['C']}));
+      ptr = std::make_shared<actors::Zombie>(actors::Zombie(args['D'], args['H'], {(double)args['R'], (double)args['C']}));
       break;
     case ActorID::WALL_ID:
-      ptr = std::make_shared<actors::Actor>(Wall(args['H'], {(double)args['R'], (double)args['C']}));
+      ptr = std::make_shared<actors::Wall>(actors::Wall(args['H'], {(double)args['R'], (double)args['C']}));
       break;
     default:
       assert(false);
@@ -132,8 +132,8 @@ void actors::Hero::collide(actors::Actor& _ca) {
 void actors::Hero::collide(actors::Hero& _ch) {}
 
 void actors::Hero::collide(actors::Zombie& _cz) {
-  setCurHP(getCurHP() - _cz.getDamagePoints());
-  _cz.setCurHP(_cz.getCurHP() - getDamagePoints());
+  this->setCurHP(this->getCurHP() - _cz.getDamagePoints());
+  _cz.setCurHP(_cz.getCurHP() - this->getDamagePoints());
 }
 
 void actors::Hero::collide(actors::Wall& _cw) {

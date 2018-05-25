@@ -11,13 +11,13 @@
 
 namespace actors {
 
-enum ActorID {HERO_ID = 0, PRINCESS_ID, ZOMBIE_ID, DRAGON_ID, WALL_ID};
+enum ActorID {HERO_ID = '@', PRINCESS_ID = '*', ZOMBIE_ID = 'z', DRAGON_ID = 'D', WALL_ID = '#'};
 
 class Actor;
 class Hero;
-class Princess;
+//class Princess;
 class Zombie;
-class Dragon;
+//class Dragon;
 class Wall;
 
 #define EPS 2e-15
@@ -76,7 +76,7 @@ class Actor {
   Point coord_ = {0, 0};
 };
 
-class Hero : Actor {
+class Hero : public Actor {
  public:
   Hero() = default;
   Hero(int damage, int mana, int health, Point coord);
@@ -86,7 +86,7 @@ class Hero : Actor {
   void collide(Wall&) override;
 };
 
-class Zombie : Actor {
+class Zombie : public Actor {
  public:
   Zombie() = default;
   Zombie(int damage, int health, Point coord);
@@ -97,7 +97,7 @@ class Zombie : Actor {
 
 };
 
-class Wall : Actor {
+class Wall : public Actor {
  public:
   Wall() = default;
   Wall(int health, Point coord);
