@@ -84,19 +84,25 @@ class SStat {
 //actor's coordinate statistics
 class CStat {
  public:
-  void setCoord (Point p);
-  Point getCoord () const;
+  void setCoord(Point p);
+  Point getCoord() const;
  protected:
   Point coordinate_;
 };
 
-class HeroStat : public HPStat, public MPStat, public DPStat, public VPStat, public FStat, public CStat {};
+class HeroStat
+    : public HPStat, public MPStat, public DPStat, public VPStat, public FStat, public SStat, public CStat {
+};
 
-class PrincessStat : public MPStat, public VPStat, public FStat, public CStat {};
+class PrincessStat : public MPStat, public VPStat, public FStat, public SStat, public CStat {};
 
-class ZombieStat : public HPStat, public DPStat, public VPStat, public FStat, public CStat {};
+class ZombieStat : public HPStat, public DPStat, public VPStat, public FStat, public SStat, public CStat {};
 
-class DragonStat : public HPStat, public MPStat, public DPStat, public VPStat, public FStat, public CStat {};
+class DragonStat
+    : public HPStat, public MPStat, public DPStat, public VPStat, public FStat, public SStat, public CStat {
+};
+
+class WallStat : public HPStat, public FStat, public SStat {};
 
 } // namespace stats
 #endif //ROGUELIKE_STATISTICS_H
