@@ -5,6 +5,8 @@
 #ifndef ROGUELIKE_STATISTICS_H
 #define ROGUELIKE_STATISTICS_H
 
+#include <Point.h>
+
 namespace stats {
 
 //health points statistics
@@ -67,6 +69,7 @@ class FStat {
   bool is_immortal_ = false;
 };
 
+//statistics of actor's symbol
 class SStat {
  public:
   void setDeadSymbol(char);
@@ -78,28 +81,22 @@ class SStat {
   bool undead_symbol_ = false;
 };
 
-class HeroStat {
-  HPStat hp;
-  MPStat mp;
-  DPStat dp;
-  VPStat vp;
-  FStat flags;
+//actor's coordinate statistics
+class CStat {
+ public:
+  void setCoord (Point p);
+  Point getCoord () const;
+ protected:
+  Point coordinate_;
 };
 
-class PrincessStat {
-  MPStat mp;
-  VPStat vp;
-  FStat flags;
-};
+class HeroStat : public HPStat, public MPStat, public DPStat, public VPStat, public FStat, public CStat {};
 
-class ZombieStat {
-  HPStat hp;
-  DPStat dp;
-  VPStat vp;
-  FStat flags;
-};
+class PrincessStat : public MPStat, public VPStat, public FStat, public CStat {};
 
-class DragonStat : HeroStat{};
+class ZombieStat : public HPStat, public DPStat, public VPStat, public FStat, public CStat {};
+
+class DragonStat : public HPStat, public MPStat, public DPStat, public VPStat, public FStat, public CStat {};
 
 } // namespace stats
 #endif //ROGUELIKE_STATISTICS_H

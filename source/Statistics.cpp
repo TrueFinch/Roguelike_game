@@ -99,3 +99,11 @@ void stats::SStat::setUndeadSymbol(char c) {
 bool stats::SStat::getUndeadSymbol() const {
   return undead_symbol_;
 }
+
+void stats::CStat::setCoord(Point p) {
+  coordinate_ = p;
+}
+
+Point stats::CStat::getCoord() const {
+  return coordinate_;
+}
