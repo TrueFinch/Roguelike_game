@@ -14,6 +14,7 @@
       "max_mana_points_": 150,
       "visibility": 30,
       "undead_symbol_": "*",
+      "dead_symbol": "+",
       "is_dead_": false,
       "is_immortal_": true
     },
