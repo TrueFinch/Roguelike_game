@@ -9,6 +9,12 @@
 
 namespace stats {
 
+class Statistics {
+ public:
+  Statistics() = default;
+  virtual ~Statistics() = default;
+};
+
 //health points statistics
 class HPStat {
  public:
@@ -91,18 +97,52 @@ class CStat {
 };
 
 class HeroStat
-    : public HPStat, public MPStat, public DPStat, public VPStat, public FStat, public SStat, public CStat {
+    : public Statistics,
+      public HPStat,
+      public MPStat,
+      public DPStat,
+      public VPStat,
+      public FStat,
+      public SStat,
+      public CStat {
 };
 
-class PrincessStat : public MPStat, public VPStat, public FStat, public SStat, public CStat {};
+class PrincessStat :
+    public Statistics,
+    public MPStat,
+    public VPStat,
+    public FStat,
+    public SStat,
+    public CStat {
+};
 
-class ZombieStat : public HPStat, public DPStat, public VPStat, public FStat, public SStat, public CStat {};
+class ZombieStat
+    : public Statistics,
+      public HPStat,
+      public DPStat,
+      public VPStat,
+      public FStat,
+      public SStat,
+      public CStat {
+};
 
 class DragonStat
-    : public HPStat, public MPStat, public DPStat, public VPStat, public FStat, public SStat, public CStat {
+    : public HPStat,
+      public Statistics,
+      public MPStat,
+      public DPStat,
+      public VPStat,
+      public FStat,
+      public SStat,
+      public CStat {
 };
 
-class WallStat : public HPStat, public FStat, public SStat {};
+class WallStat :
+    public Statistics,
+    public HPStat,
+    public FStat,
+    public SStat {
+};
 
 } // namespace stats
 #endif //ROGUELIKE_STATISTICS_H
