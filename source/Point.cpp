@@ -5,6 +5,11 @@
 #include "Point.h"
 #include <cmath>
 
+Point::Point() {
+  x = 42.0;
+  y = 42.0;
+}
+
 Point::Point(double x, double y) : x{x}, y{y} {}
 
 const bool Point::operator<(const Point& rhs) const {
