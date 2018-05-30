@@ -103,7 +103,7 @@ class SymbolsStat {
 class CoordinateStat {
  public:
   CoordinateStat() = default;
-  CoordinateStat(Point);
+  explicit CoordinateStat(Point);
   CoordinateStat(double, double);
   void setCoord(Point p);
   Point getCoord() const;
@@ -144,6 +144,15 @@ class PrincessStat : public Statistics,
                      public CoordinateStat {
  public:
   PrincessStat() = default;
+  PrincessStat(int max_mp,
+               int cur_mp,
+               int max_vp,
+               int cur_vp,
+               bool is_dead,
+               bool is_immortal,
+               char dead_symbol,
+               char undead_symbol,
+               Point p);
 };
 
 class ZombieStat : public Statistics,
@@ -155,6 +164,17 @@ class ZombieStat : public Statistics,
                    public CoordinateStat {
  public:
   ZombieStat() = default;
+  ZombieStat(int max_hp,
+             int cur_hp,
+             int max_dp,
+             int cur_dp,
+             int max_vp,
+             int cur_vp,
+             bool is_dead,
+             bool is_immortal,
+             char dead_symbol,
+             char undead_symbol,
+             Point p);
 };
 
 class DragonStat : public Statistics,
@@ -167,6 +187,19 @@ class DragonStat : public Statistics,
                    public CoordinateStat {
  public:
   DragonStat() = default;
+  DragonStat(int max_hp,
+             int cur_hp,
+             int max_mp,
+             int cur_mp,
+             int max_dp,
+             int cur_dp,
+             int max_vp,
+             int cur_vp,
+             bool is_dead,
+             bool is_immortal,
+             char dead_symbol,
+             char undead_symbol,
+             Point p);
 };
 
 class WallStat : public Statistics,
@@ -176,6 +209,13 @@ class WallStat : public Statistics,
                  public CoordinateStat {
  public:
   WallStat() = default;
+  WallStat(int max_hp,
+           int cur_hp,
+           bool is_dead,
+           bool is_immortal,
+           char dead_symbol,
+           char undead_symbol,
+           Point p);
 };
 
 } // namespace stats
