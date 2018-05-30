@@ -5,124 +5,47 @@
 #include <Actors.h>
 #include <cmath>
 #include <cassert>
+#include <utility>
 
-actors::Point::Point() {
-  this->x = 42.0;
-  this->y = 42.0;
-}
+std::shared_ptr<actors::Actor> actors::Actor::createActor(actors::ActorID id, std::shared_ptr<stats::Statistics> st) {
+  std::shared_ptr<actors::Actor> actor_ptr;
 
-actors::Point::Point(double x, double y) : x{x}, y{y} {}
-
-const bool actors::Point::operator<(const Point& rhs) const {
-  return ((this->x < rhs.x) && (this->y < rhs.y));
-}
-
-const bool actors::Point::operator==(const Point& rhs) const {
-  return ((fabs(this->x - rhs.x) <= EPS) && (fabs(this->y - rhs.y) <= EPS));
-}
-
-void actors::Actor::setCoord(actors::Point p) {
-  coord_ = p;
-}
-
-actors::Point actors::Actor::getCoord() const {
-  return coord_;
-}
-
-void actors::Actor::setLsymbol(char c) {
-  lsymbol_ = c;
-}
-
-char actors::Actor::getLsymbol() const {
-  return lsymbol_;
-}
-
-void actors::Actor::setDsymbol(char c) {
-  dsymbol_ = c;
-}
-
-char actors::Actor::getDsymbol() const {
-  return dsymbol_;
-}
-
-void actors::Actor::setMaxHP(int hp) {
-  max_health_points_ = hp;
-}
-
-int actors::Actor::getMaxHP() const {
-  return max_health_points_;
-}
-
-void actors::Actor::setCurHP(int hp) {
-  cur_health_points_ = hp;
-}
-
-int actors::Actor::getCurHP() const {
-  return cur_health_points_;
-}
-
-void actors::Actor::setMaxMP(int mp) {
-  max_mana_points_ = mp;
-}
-
-int actors::Actor::getMaxMP() const {
-  return max_mana_points_;
-}
-
-void actors::Actor::setCurMP(int mp) {
-  cur_mana_points_ = mp;
-}
-
-int actors::Actor::getCurMP() const {
-  return cur_mana_points_;
-}
-
-void actors::Actor::setDamagePoints(int d) {
-  damage_points_ = d;
-}
-
-int actors::Actor::getDamagePoints() {
-  return damage_points_;
-}
-
-bool actors::Actor::isDead() const {
-  return is_dead_;
-}
-
-bool actors::Actor::isImmortal() const {
-  return is_immortal_;
-}
-
-std::shared_ptr<actors::Actor> actors::Actor::createActor(actors::ActorID id, std::map<char, int> args) {
-  std::shared_ptr<actors::Actor> ptr;
-
-  switch(id) {
+  switch (id) {
     case ActorID::HERO_ID:
-      ptr = std::make_shared<actors::Hero>(actors::Hero(args['D'], args['M'], args['H'], {(double)args['R'], (double)args['C']}));
+      actor_ptr = std::make_shared<actors::Hero>(actors::Hero(std::dynamic_pointer_cast<stats::HeroStat>(st)));
       break;
     case ActorID::ZOMBIE_ID:
-      ptr = std::make_shared<actors::Zombie>(actors::Zombie(args['D'], args['H'], {(double)args['R'], (double)args['C']}));
+      actor_ptr = std::make_shared<actors::Zombie>(actors::Zombie(std::dynamic_pointer_cast<stats::ZombieStat>(st)));
       break;
     case ActorID::WALL_ID:
-      ptr = std::make_shared<actors::Wall>(actors::Wall(args['H'], {(double)args['R'], (double)args['C']}));
+      actor_ptr = std::make_shared<actors::Wall>(actors::Wall(std::dynamic_pointer_cast<stats::WallStat>(st)));
       break;
-    default:
-      assert(false);
+    case ActorID::PRINCESS_ID:
+      actor_ptr = std::make_shared<actors::Princess>(actors::Princess(std::dynamic_pointer_cast<stats::PrincessStat>(st)));
+      break;
+//    default:
+//      assert(false);
+//    case PRINCESS_ID:break;
+//    case DRAGON_ID:break;
   }
-  return ptr;
+  return actor_ptr;
 }
 
-actors::Hero::Hero(int damage, int mana, int health, actors::Point coord) {
-  damage_points_ = damage;
-  max_mana_points_ = mana;
-  cur_mana_points_ = mana;
-  max_health_points_ = health;
-  cur_health_points_ = health;
-  coord_ = coord;
-  lsymbol_ = '@';
-  dsymbol_ = '~';
-  is_dead_ = false;
-  is_immortal_ = false;
+actors::Hero::Hero(std::shared_ptr<stats::HeroStat> new_st) {
+//  std::shared_ptr<stats::HeroStat> new_st = std::dynamic_pointer_cast<stats::HeroStat>(st);
+  this->setMaxHP(new_st->getMaxHP());
+  this->setCurHP(new_st->getCurHP());
+  this->setMaxMP(new_st->getMaxMP());
+  this->setCurMP(new_st->getCurMP());
+  this->setMaxDP(new_st->getMaxDP());
+  this->setCurDP(new_st->getCurDP());
+  this->setMaxVP(new_st->getMaxVP());
+  this->setCurVP(new_st->getCurVP());
+  this->setDead(new_st->isDead());
+  this->setImmortal(new_st->isImmortal());
+  this->setDeadSymbol(new_st->getDeadSymbol());
+  this->setUndeadSymbol(new_st->getUndeadSymbol());
+  this->setCoord(new_st->getCoord());
 }
 
 void actors::Hero::collide(actors::Actor& _ca) {
@@ -132,23 +55,30 @@ void actors::Hero::collide(actors::Actor& _ca) {
 void actors::Hero::collide(actors::Hero& _ch) {}
 
 void actors::Hero::collide(actors::Zombie& _cz) {
-  this->setCurHP(this->getCurHP() - _cz.getDamagePoints());
-  _cz.setCurHP(_cz.getCurHP() - this->getDamagePoints());
+  this->setCurHP(this->getCurHP() - _cz.getCurDP());
+  _cz.setCurHP(_cz.getCurHP() - this->getCurDP());
 }
 
 void actors::Hero::collide(actors::Wall& _cw) {
-  _cw.setCurHP(_cw.getCurHP() - getDamagePoints());
+  _cw.setCurHP(_cw.getCurHP() - this->getCurDP());
 }
 
-actors::Zombie::Zombie(int damage, int health, actors::Point coord) {
-  damage_points_ = damage;
-  max_health_points_ = health;
-  cur_health_points_ = health;
-  coord_ = coord;
-  lsymbol_ = 'z';
-  dsymbol_ = '+';
-  is_dead_ = false;
-  is_immortal_ = false;
+void actors::Hero::collide(actors::Princess&) {
+  //some win event
+}
+
+actors::Zombie::Zombie(std::shared_ptr<stats::ZombieStat> new_st) {
+  this->setMaxHP(new_st->getMaxHP());
+  this->setCurHP(new_st->getCurHP());
+  this->setMaxDP(new_st->getMaxDP());
+  this->setCurDP(new_st->getCurDP());
+  this->setMaxVP(new_st->getMaxVP());
+  this->setCurVP(new_st->getCurVP());
+  this->setDead(new_st->isDead());
+  this->setImmortal(new_st->isImmortal());
+  this->setDeadSymbol(new_st->getDeadSymbol());
+  this->setUndeadSymbol(new_st->getUndeadSymbol());
+  this->setCoord(new_st->getCoord());
 }
 
 void actors::Zombie::collide(actors::Actor& _ca) {
@@ -163,12 +93,18 @@ void actors::Zombie::collide(actors::Zombie& _cz) {}
 
 void actors::Zombie::collide(actors::Wall& _cv) {}
 
-actors::Wall::Wall(int health, actors::Point coord) {
-  max_health_points_ = health;
-  cur_health_points_ = health;
-  coord_ = coord;
-  is_dead_ = false;
-  is_immortal_ = false;
+void actors::Zombie::collide(actors::Princess&) {
+  //do nothing
+}
+
+actors::Wall::Wall(std::shared_ptr<stats::WallStat> st) {
+  this->setMaxHP(st->getMaxHP());
+  this->setCurHP(st->getCurHP());
+  this->setDead(st->isDead());
+  this->setImmortal(st->isImmortal());
+  this->setDeadSymbol(st->getDeadSymbol());
+  this->setUndeadSymbol(st->getUndeadSymbol());
+  this->setCoord(st->getCoord());
 }
 
 void actors::Wall::collide(actors::Actor& _ca) {
@@ -184,3 +120,37 @@ void actors::Wall::collide(actors::Zombie& _cz) {
 }
 
 void actors::Wall::collide(actors::Wall&) {}
+
+void actors::Wall::collide(actors::Princess&) {}
+
+actors::Princess::Princess(std::shared_ptr<stats::PrincessStat> new_st) {
+  this->setMaxMP(new_st->getMaxMP());
+  this->setCurMP(new_st->getCurMP());
+  this->setMaxVP(new_st->getMaxVP());
+  this->setCurVP(new_st->getCurVP());
+  this->setDead(new_st->isDead());
+  this->setImmortal(new_st->isImmortal());
+  this->setDeadSymbol(new_st->getDeadSymbol());
+  this->setUndeadSymbol(new_st->getUndeadSymbol());
+  this->setCoord(new_st->getCoord());
+}
+
+void actors::Princess::collide(actors::Actor& _ca) {
+  _ca.collide(*this);
+}
+
+void actors::Princess::collide(actors::Hero& _ch) {
+  _ch.collide(*this);
+}
+
+void actors::Princess::collide(actors::Zombie& _cz) {
+  _cz.collide(*this);
+}
+
+void actors::Princess::collide(actors::Wall& _cw) {
+  _cw.collide(*this);
+}
+
+void actors::Princess::collide(actors::Princess&) {
+  //lol it's not possible
+}

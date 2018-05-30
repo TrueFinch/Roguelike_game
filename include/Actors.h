@@ -8,52 +8,26 @@
 #include <memory>
 #include <map>
 #include <string>
+#include <Statistics.h>
+#include <Point.h>
 
 namespace actors {
 
-enum ActorID {HERO_ID = '@', PRINCESS_ID = '*', ZOMBIE_ID = 'z', DRAGON_ID = 'D', WALL_ID = '#'};
+enum ActorID {HERO_ID = '@', ZOMBIE_ID = 'z', WALL_ID = '#', PRINCESS_ID = '*', DRAGON_ID = 'D'};
 
 class Actor;
 class Hero;
-//class Princess;
 class Zombie;
-//class Dragon;
 class Wall;
-
-#define EPS 2e-15
-
-struct Point {
-  Point();
-  Point(double x, double y);
-  double x, y;
-  const bool operator<(const Point& rhs) const;
-  const bool operator==(const Point& rhs) const;
-};
+class Princess;
+//class Dragon;
 
 class Actor {
  public:
   Actor() = default;
-  void setCoord(Point);
-  Point getCoord() const;
-  void setLsymbol(char);
-  char getLsymbol() const;
-  void setDsymbol(char);
-  char getDsymbol() const;
-  void setMaxHP(int);
-  int getMaxHP() const;
-  void setCurHP(int);
-  int getCurHP() const;
-  void setMaxMP(int);
-  int getMaxMP() const;
-  void setCurMP(int);
-  int getCurMP() const;
-  void setDamagePoints(int);
-  int getDamagePoints();
-  bool isDead() const;
-  bool isImmortal() const;
   virtual void collide(Actor&) = 0;
   virtual void collide(Hero&) = 0;
-//  virtual void collide(const Princess&) = 0;
+  virtual void collide(Princess&) = 0;
   virtual void collide(Zombie&) = 0;
 //  virtual void collide(const Dragon&) = 0;
 //  virtual void collide(const PassiveActor&) = 0;
@@ -61,51 +35,53 @@ class Actor {
 //  virtual void collide(const Potion&) = 0;
 //  virtual void collide(const HealthP&) = 0;
 //  virtual void collide(const ManaP&) = 0;
-    static std::shared_ptr<actors::Actor> createActor(actors::ActorID id, std::map<char, int> args);
- protected:
-  int damage_points_ = 0;
-  int cur_mana_points_ = 0;
-  int max_mana_points_ = 0;
-  int cur_health_points_ = 0;
-  int max_health_points_ = 0;
-  int visibility = 0;
-  char lsymbol_ = '$';
-  char dsymbol_ = '$';
-  bool is_dead_ = false;
-  bool is_immortal_ = false;
-  Point coord_ = {0, 0};
+    static std::shared_ptr<actors::Actor> createActor(actors::ActorID id, std::shared_ptr<stats::Statistics> st);
+    virtual ~Actor() = default;
 };
 
-class Hero : public Actor {
+class Hero : public stats::HeroStat, public Actor {
  public:
   Hero() = default;
-  Hero(int damage, int mana, int health, Point coord);
+  explicit Hero(std::shared_ptr<stats::HeroStat>);
   void collide(Actor&) override;
   void collide(Hero&) override;
   void collide(Zombie&) override;
   void collide(Wall&) override;
+  void collide(Princess&) override;
 };
 
-class Zombie : public Actor {
+class Zombie : public stats::ZombieStat, public Actor {
  public:
   Zombie() = default;
-  Zombie(int damage, int health, Point coord);
+  explicit Zombie(std::shared_ptr<stats::ZombieStat>);
   void collide(Actor&) override;
   void collide(Hero&) override;
   void collide(Zombie&) override;
   void collide(Wall&) override;
-
+  void collide(Princess&) override;
 };
 
-class Wall : public Actor {
+class Wall : public stats::WallStat, public Actor{
  public:
   Wall() = default;
-  Wall(int health, Point coord);
+  explicit Wall(std::shared_ptr<stats::WallStat>);
   void collide(Actor&) override;
   void collide(Hero&) override;
-  void collide(Zombie&) override;  
+  void collide(Zombie&) override;
   void collide(Wall&) override;
+  void collide(Princess&) override;
 };
+
+ class Princess : public stats::PrincessStat, public Actor {
+  public:
+   Princess() = default;
+   explicit Princess(std::shared_ptr<stats::PrincessStat>);
+   void collide(Actor&) override;
+   void collide(Hero&) override;
+   void collide(Zombie&) override;
+   void collide(Wall&) override;
+   void collide(Princess&) override;
+ };
 
 } // namespace actors
 
