@@ -18,6 +18,8 @@ class Statistics {
 //health points statistics
 class HPStat {
  public:
+  HPStat() = default;
+  HPStat(int, int);
   void setMaxHP(int);
   int getMaxHP() const;
   void setCurHP(int);
@@ -30,6 +32,8 @@ class HPStat {
 //mana points statistics
 class MPStat {
  public:
+  MPStat() = default;
+  MPStat(int, int);
   void setMaxMP(int);
   int getMaxMP() const;
   void setCurMP(int);
@@ -42,6 +46,8 @@ class MPStat {
 //damage points statistics
 class DPStat {
  public:
+  DPStat() = default;
+  DPStat(int, int);
   void setMaxDP(int);
   int getMaxDP() const;
   void setCurDP(int);
@@ -54,6 +60,8 @@ class DPStat {
 //visibility points statistics
 class VPStat {
  public:
+  VPStat() = default;
+  VPStat(int, int);
   void setMaxVP(int);
   int getMaxVP() const;
   void setCurVP(int);
@@ -64,8 +72,10 @@ class VPStat {
 };
 
 //is actor dead or immortal statistics
-class FStat {
+class SpecialFlagsStat {
  public:
+  SpecialFlagsStat() = default;
+  SpecialFlagsStat(bool, bool);
   void setDead(bool);
   bool isDead() const;
   void setImmortal(bool);
@@ -76,72 +86,96 @@ class FStat {
 };
 
 //statistics of actor's symbol
-class SStat {
+class SymbolsStat {
  public:
+  SymbolsStat() = default;
+  SymbolsStat(char, char);
   void setDeadSymbol(char);
   char getDeadSymbol() const;
   void setUndeadSymbol(char);
   bool getUndeadSymbol() const;
  protected:
-  bool dead_symbol_ = false;
-  bool undead_symbol_ = false;
+  char dead_symbol_ = '4';
+  char undead_symbol_ = '2';
 };
 
 //actor's coordinate statistics
-class CStat {
+class CoordinateStat {
  public:
+  CoordinateStat() = default;
+  CoordinateStat(Point);
+  CoordinateStat(double, double);
   void setCoord(Point p);
   Point getCoord() const;
  protected:
-  Point coordinate_;
+  Point coordinate_ = {42, 42};
 };
 
-class HeroStat
-    : public Statistics,
-      public HPStat,
-      public MPStat,
-      public DPStat,
-      public VPStat,
-      public FStat,
-      public SStat,
-      public CStat {
+class HeroStat : public Statistics,
+                 public HPStat,
+                 public MPStat,
+                 public DPStat,
+                 public VPStat,
+                 public SpecialFlagsStat,
+                 public SymbolsStat,
+                 public CoordinateStat {
+ public:
+  HeroStat() = default;
+  HeroStat(int max_hp,
+           int cur_hp,
+           int max_mp,
+           int cur_mp,
+           int max_dp,
+           int cur_dp,
+           int max_vp,
+           int cur_vp,
+           bool is_dead,
+           bool is_immortal,
+           char dead_symbol,
+           char undead_symbol,
+           Point p);
 };
 
-class PrincessStat :
-    public Statistics,
-    public MPStat,
-    public VPStat,
-    public FStat,
-    public SStat,
-    public CStat {
+class PrincessStat : public Statistics,
+                     public MPStat,
+                     public VPStat,
+                     public SpecialFlagsStat,
+                     public SymbolsStat,
+                     public CoordinateStat {
+ public:
+  PrincessStat() = default;
 };
 
-class ZombieStat
-    : public Statistics,
-      public HPStat,
-      public DPStat,
-      public VPStat,
-      public FStat,
-      public SStat,
-      public CStat {
+class ZombieStat : public Statistics,
+                   public HPStat,
+                   public DPStat,
+                   public VPStat,
+                   public SpecialFlagsStat,
+                   public SymbolsStat,
+                   public CoordinateStat {
+ public:
+  ZombieStat() = default;
 };
 
-class DragonStat
-    : public HPStat,
-      public Statistics,
-      public MPStat,
-      public DPStat,
-      public VPStat,
-      public FStat,
-      public SStat,
-      public CStat {
+class DragonStat : public Statistics,
+                   public HPStat,
+                   public MPStat,
+                   public DPStat,
+                   public VPStat,
+                   public SpecialFlagsStat,
+                   public SymbolsStat,
+                   public CoordinateStat {
+ public:
+  DragonStat() = default;
 };
 
-class WallStat :
-    public Statistics,
-    public HPStat,
-    public FStat,
-    public SStat {
+class WallStat : public Statistics,
+                 public HPStat,
+                 public SpecialFlagsStat,
+                 public SymbolsStat,
+                 public CoordinateStat {
+ public:
+  WallStat() = default;
 };
 
 } // namespace stats
