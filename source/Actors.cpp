@@ -21,7 +21,11 @@ std::shared_ptr<actors::Actor> actors::Actor::createActor(actors::ActorID id, st
       actor_ptr = std::make_shared<actors::Wall>(actors::Wall(std::dynamic_pointer_cast<stats::WallStat>(st)));
       break;
     case ActorID::PRINCESS_ID:
-      actor_ptr = std::make_shared<actors::Princess>(actors::Princess(std::dynamic_pointer_cast<stats::PrincessStat>(st)));
+      actor_ptr =
+          std::make_shared<actors::Princess>(actors::Princess(std::dynamic_pointer_cast<stats::PrincessStat>(st)));
+      break;
+    case ActorID::DRAGON_ID:
+      actor_ptr = std::make_shared<actors::Dragon>(actors::Dragon(std::dynamic_pointer_cast<stats::DragonStat>(st)));
       break;
 //    default:
 //      assert(false);
@@ -67,6 +71,11 @@ void actors::Hero::collide(actors::Princess&) {
   //some win event
 }
 
+void actors::Hero::collide(actors::Dragon& _cd) {
+  this->setCurHP(this->getCurHP() - _cd.getCurDP());
+  _cd.setCurHP(_cd.getCurHP() - this->getCurDP());
+}
+
 actors::Zombie::Zombie(std::shared_ptr<stats::ZombieStat> new_st) {
   this->setMaxHP(new_st->getMaxHP());
   this->setCurHP(new_st->getCurHP());
@@ -97,6 +106,10 @@ void actors::Zombie::collide(actors::Princess&) {
   //do nothing
 }
 
+void actors::Zombie::collide(actors::Dragon&) {
+  //do nothing
+}
+
 actors::Wall::Wall(std::shared_ptr<stats::WallStat> st) {
   this->setMaxHP(st->getMaxHP());
   this->setCurHP(st->getCurHP());
@@ -122,6 +135,10 @@ void actors::Wall::collide(actors::Zombie& _cz) {
 void actors::Wall::collide(actors::Wall&) {}
 
 void actors::Wall::collide(actors::Princess&) {}
+
+void actors::Wall::collide(actors::Dragon&) {
+  //do nothing
+}
 
 actors::Princess::Princess(std::shared_ptr<stats::PrincessStat> new_st) {
   this->setMaxMP(new_st->getMaxMP());
@@ -153,4 +170,48 @@ void actors::Princess::collide(actors::Wall& _cw) {
 
 void actors::Princess::collide(actors::Princess&) {
   //lol it's not possible
+}
+
+void actors::Princess::collide(actors::Dragon&) {
+  //do nothing
+}
+
+actors::Dragon::Dragon(std::shared_ptr<stats::DragonStat> new_st) {
+  this->setMaxHP(new_st->getMaxHP());
+  this->setCurHP(new_st->getCurHP());
+  this->setMaxMP(new_st->getMaxMP());
+  this->setCurMP(new_st->getCurMP());
+  this->setMaxDP(new_st->getMaxDP());
+  this->setCurDP(new_st->getCurDP());
+  this->setMaxVP(new_st->getMaxVP());
+  this->setCurVP(new_st->getCurVP());
+  this->setDead(new_st->isDead());
+  this->setImmortal(new_st->isImmortal());
+  this->setDeadSymbol(new_st->getDeadSymbol());
+  this->setUndeadSymbol(new_st->getUndeadSymbol());
+  this->setCoord(new_st->getCoord());
+}
+
+void actors::Dragon::collide(actors::Actor& _ca) {
+  _ca.collide(*this);
+}
+
+void actors::Dragon::collide(actors::Hero& _ch) {
+  _ch.collide(*this);
+}
+
+void actors::Dragon::collide(actors::Zombie& _cz) {
+  _cz.collide(*this);
+}
+
+void actors::Dragon::collide(actors::Wall& _cw) {
+  _cw.collide(*this);
+}
+
+void actors::Dragon::collide(actors::Princess& _cp) {
+  _cp.collide(*this);
+}
+
+void actors::Dragon::collide(actors::Dragon&) {
+  //do nothing
 }

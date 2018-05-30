@@ -20,18 +20,17 @@ class Hero;
 class Zombie;
 class Wall;
 class Princess;
-//class Dragon;
+class Dragon;
 
 class Actor {
  public:
   Actor() = default;
   virtual void collide(Actor&) = 0;
   virtual void collide(Hero&) = 0;
-  virtual void collide(Princess&) = 0;
   virtual void collide(Zombie&) = 0;
-//  virtual void collide(const Dragon&) = 0;
-//  virtual void collide(const PassiveActor&) = 0;
   virtual void collide(Wall&) = 0;
+  virtual void collide(Princess&) = 0;
+  virtual void collide(Dragon&) = 0;
 //  virtual void collide(const Potion&) = 0;
 //  virtual void collide(const HealthP&) = 0;
 //  virtual void collide(const ManaP&) = 0;
@@ -48,6 +47,7 @@ class Hero : public stats::HeroStat, public Actor {
   void collide(Zombie&) override;
   void collide(Wall&) override;
   void collide(Princess&) override;
+  void collide(Dragon&) override;
 };
 
 class Zombie : public stats::ZombieStat, public Actor {
@@ -59,6 +59,7 @@ class Zombie : public stats::ZombieStat, public Actor {
   void collide(Zombie&) override;
   void collide(Wall&) override;
   void collide(Princess&) override;
+  void collide(Dragon&) override;
 };
 
 class Wall : public stats::WallStat, public Actor{
@@ -70,6 +71,7 @@ class Wall : public stats::WallStat, public Actor{
   void collide(Zombie&) override;
   void collide(Wall&) override;
   void collide(Princess&) override;
+  void collide(Dragon&) override;
 };
 
  class Princess : public stats::PrincessStat, public Actor {
@@ -81,6 +83,19 @@ class Wall : public stats::WallStat, public Actor{
    void collide(Zombie&) override;
    void collide(Wall&) override;
    void collide(Princess&) override;
+   void collide(Dragon&) override;
+ };
+
+ class Dragon : public stats::DragonStat, public Actor {
+  public:
+   Dragon() = default;
+   explicit Dragon(std::shared_ptr<stats::DragonStat>);
+   void collide(Actor&) override;
+   void collide(Hero&) override;
+   void collide(Zombie&) override;
+   void collide(Wall&) override;
+   void collide(Princess&) override;
+   void collide(Dragon&) override;
  };
 
 } // namespace actors
