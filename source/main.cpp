@@ -3,7 +3,9 @@
 #include "Game.h"
 
 int main() {
-  game_space::Game game(45, 125);
+  int max_rows, max_cols;
+  getmaxyx(stdscr, max_rows, max_cols);
+  game_space::Game game(max_rows, max_cols);
   game.start();
   return 0;
 }
