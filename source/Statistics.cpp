@@ -108,7 +108,7 @@ void stats::SymbolsStat::setUndeadSymbol(char c) {
   undead_symbol_ = c;
 }
 
-bool stats::SymbolsStat::getUndeadSymbol() const {
+char stats::SymbolsStat::getUndeadSymbol() const {
   return undead_symbol_;
 }
 
@@ -124,36 +124,84 @@ Point stats::CoordinateStat::getCoord() const {
   return coordinate_;
 }
 
-stats::HeroStat::HeroStat(int max_hp, int cur_hp, int max_mp, int cur_mp, int max_dp, int cur_dp,
-                          int max_vp, int cur_vp, bool is_dead, bool is_immortal, char dead_symbol, char undead_symbol,
-                          Point p) : HPStat(max_hp, cur_hp), MPStat(max_mp, cur_mp),
-                                     DPStat(max_dp, cur_dp), VPStat(max_vp, cur_vp),
-                                     SpecialFlagsStat(is_dead, is_immortal), SymbolsStat(dead_symbol, undead_symbol),
+stats::HeroStat::HeroStat(int max_hp,
+                          int cur_hp,
+                          int max_mp,
+                          int cur_mp,
+                          int max_dp,
+                          int cur_dp,
+                          int max_vp,
+                          int cur_vp,
+                          char dead_symbol,
+                          char undead_symbol,
+                          bool is_dead,
+                          bool is_immortal,
+                          Point p) : HPStat(max_hp, cur_hp),
+                                     MPStat(max_mp, cur_mp),
+                                     DPStat(max_dp, cur_dp),
+                                     VPStat(max_vp, cur_vp),
+                                     SymbolsStat(dead_symbol, undead_symbol),
+                                     SpecialFlagsStat(is_dead, is_immortal),
                                      CoordinateStat(p) {}
 
-stats::PrincessStat::PrincessStat(int max_mp, int cur_mp, int max_vp, int cur_vp,
-                                  bool is_dead, bool is_immortal, char dead_symbol, char undead_symbol,
+stats::PrincessStat::PrincessStat(int max_mp,
+                                  int cur_mp,
+                                  int max_vp,
+                                  int cur_vp,
+                                  char dead_symbol,
+                                  char undead_symbol,
+                                  bool is_dead,
+                                  bool is_immortal,
                                   Point p) : MPStat(max_mp, cur_mp),
                                              VPStat(max_vp, cur_vp),
-                                             SpecialFlagsStat(is_dead, is_immortal),
                                              SymbolsStat(dead_symbol, undead_symbol),
+                                             SpecialFlagsStat(is_dead, is_immortal),
                                              CoordinateStat(p) {}
 
-stats::ZombieStat::ZombieStat(int max_hp, int cur_hp, int max_dp, int cur_dp, int max_vp,
-                              int cur_vp, bool is_dead, bool is_immortal, char dead_symbol, char undead_symbol,
-                              Point p) : HPStat(max_hp, cur_hp), DPStat(max_dp, cur_dp),
-                                         VPStat(max_vp, cur_vp), SpecialFlagsStat(is_dead, is_immortal),
-                                         SymbolsStat(dead_symbol, undead_symbol), CoordinateStat(p) {}
+stats::ZombieStat::ZombieStat(int max_hp,
+                              int cur_hp,
+                              int max_dp,
+                              int cur_dp,
+                              int max_vp,
+                              int cur_vp,
+                              char dead_symbol,
+                              char undead_symbol,
+                              bool is_dead,
+                              bool is_immortal,
+                              Point p) : HPStat(max_hp, cur_hp),
+                                         DPStat(max_dp, cur_dp),
+                                         VPStat(max_vp, cur_vp),
+                                         SymbolsStat(dead_symbol, undead_symbol),
+                                         SpecialFlagsStat(is_dead, is_immortal),
+                                         CoordinateStat(p) {}
 
-stats::DragonStat::DragonStat(int max_hp, int cur_hp, int max_mp, int cur_mp, int max_dp, int cur_dp,
-                              int max_vp, int cur_vp, bool is_dead, bool is_immortal, char dead_symbol,
-                              char undead_symbol, Point p) : HPStat(max_hp, cur_hp), MPStat(max_mp, cur_mp),
-                                                             DPStat(max_dp, cur_dp), VPStat(max_vp, cur_vp),
-                                                             SpecialFlagsStat(is_dead, is_immortal),
-                                                             SymbolsStat(dead_symbol, undead_symbol),
-                                                             CoordinateStat(p) {}
+stats::DragonStat::DragonStat(int max_hp,
+                              int cur_hp,
+                              int max_mp,
+                              int cur_mp,
+                              int max_dp,
+                              int cur_dp,
+                              int max_vp,
+                              int cur_vp,
+                              char dead_symbol,
+                              char undead_symbol,
+                              bool is_dead,
+                              bool is_immortal,
+                              Point p) : HPStat(max_hp, cur_hp),
+                                         MPStat(max_mp, cur_mp),
+                                         DPStat(max_dp, cur_dp),
+                                         VPStat(max_vp, cur_vp),
+                                         SymbolsStat(dead_symbol, undead_symbol),
+                                         SpecialFlagsStat(is_dead, is_immortal),
+                                         CoordinateStat(p) {}
 
-stats::WallStat::WallStat(int max_hp, int cur_hp, bool is_dead, bool is_immortal, char dead_symbol,
-                          char undead_symbol, Point p) : HPStat(max_hp, cur_hp), SpecialFlagsStat(is_dead, is_immortal),
-                                                         SymbolsStat(dead_symbol, undead_symbol),
-                                                         CoordinateStat(p) {}
+stats::WallStat::WallStat(int max_hp,
+                          int cur_hp,
+                          char dead_symbol,
+                          char undead_symbol,
+                          bool is_dead,
+                          bool is_immortal,
+                          Point p) : HPStat(max_hp, cur_hp),
+                                     SymbolsStat(dead_symbol, undead_symbol),
+                                     SpecialFlagsStat(is_dead, is_immortal),
+                                     CoordinateStat(p) {}

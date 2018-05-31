@@ -93,7 +93,7 @@ class SymbolsStat {
   void setDeadSymbol(char);
   char getDeadSymbol() const;
   void setUndeadSymbol(char);
-  bool getUndeadSymbol() const;
+  char getUndeadSymbol() const;
  protected:
   char dead_symbol_ = '4';
   char undead_symbol_ = '2';
@@ -116,8 +116,8 @@ class HeroStat : public Statistics,
                  public MPStat,
                  public DPStat,
                  public VPStat,
-                 public SpecialFlagsStat,
                  public SymbolsStat,
+                 public SpecialFlagsStat,
                  public CoordinateStat {
  public:
   HeroStat() = default;
@@ -129,18 +129,18 @@ class HeroStat : public Statistics,
            int cur_dp,
            int max_vp,
            int cur_vp,
-           bool is_dead,
-           bool is_immortal,
            char dead_symbol,
            char undead_symbol,
+           bool is_dead,
+           bool is_immortal,
            Point p);
 };
 
 class PrincessStat : public Statistics,
                      public MPStat,
                      public VPStat,
-                     public SpecialFlagsStat,
                      public SymbolsStat,
+                     public SpecialFlagsStat,
                      public CoordinateStat {
  public:
   PrincessStat() = default;
@@ -148,10 +148,10 @@ class PrincessStat : public Statistics,
                int cur_mp,
                int max_vp,
                int cur_vp,
-               bool is_dead,
-               bool is_immortal,
                char dead_symbol,
                char undead_symbol,
+               bool is_dead,
+               bool is_immortal,
                Point p);
 };
 
@@ -159,8 +159,8 @@ class ZombieStat : public Statistics,
                    public HPStat,
                    public DPStat,
                    public VPStat,
-                   public SpecialFlagsStat,
                    public SymbolsStat,
+                   public SpecialFlagsStat,
                    public CoordinateStat {
  public:
   ZombieStat() = default;
@@ -170,10 +170,10 @@ class ZombieStat : public Statistics,
              int cur_dp,
              int max_vp,
              int cur_vp,
-             bool is_dead,
-             bool is_immortal,
              char dead_symbol,
              char undead_symbol,
+             bool is_dead,
+             bool is_immortal,
              Point p);
 };
 
@@ -182,8 +182,8 @@ class DragonStat : public Statistics,
                    public MPStat,
                    public DPStat,
                    public VPStat,
-                   public SpecialFlagsStat,
                    public SymbolsStat,
+                   public SpecialFlagsStat,
                    public CoordinateStat {
  public:
   DragonStat() = default;
@@ -195,26 +195,26 @@ class DragonStat : public Statistics,
              int cur_dp,
              int max_vp,
              int cur_vp,
-             bool is_dead,
-             bool is_immortal,
              char dead_symbol,
              char undead_symbol,
+             bool is_dead,
+             bool is_immortal,
              Point p);
 };
 
 class WallStat : public Statistics,
                  public HPStat,
-                 public SpecialFlagsStat,
                  public SymbolsStat,
+                 public SpecialFlagsStat,
                  public CoordinateStat {
  public:
   WallStat() = default;
   WallStat(int max_hp,
            int cur_hp,
-           bool is_dead,
-           bool is_immortal,
            char dead_symbol,
            char undead_symbol,
+           bool is_dead,
+           bool is_immortal,
            Point p);
 };
 
