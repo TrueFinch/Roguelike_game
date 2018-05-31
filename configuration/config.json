@@ -1,47 +1,56 @@
 {
   "Actors": {
     "Hero": {
+      "health_points_": 100,
+      "mana_points_": 50,
       "damage_points_": 21,
-      "max_mana_points_": 50,
-      "max_health_points_": 100,
-      "visibility": 10,
-      "undead_symbol_": "@",
+      "visibility_points_": 10,
       "dead_symbol_": "~",
+      "dead_symbol_code_": 126,
+      "undead_symbol_": "@",
+      "undead_symbol_code_": 64,
       "is_dead_": false,
       "is_immortal_": false
-    },
-    "Princess": {
-      "max_mana_points_": 150,
-      "visibility": 30,
-      "undead_symbol_": "*",
-      "dead_symbol": "+",
-      "is_dead_": false,
-      "is_immortal_": true
     },
     "Zombie": {
+      "health_points_": 50,
       "damage_points_": 5,
-      "max_mana_points_": 0,
-      "max_health_points_": 50,
-      "visibility": 4,
+      "visibility_points_": 4,
+      "dead_symbol_": "+",
+      "dead_symbol_code_": 43,
       "undead_symbol_": "z",
-      "dead_symbol_": "+",
-      "is_dead_": false,
-      "is_immortal_": false
-    },
-    "Dragon": {
-      "damage_points_": 100,
-      "max_mana_points_": 300,
-      "max_health_points_": 400,
-      "visibility": 25,
-      "undead_symbol_": "D",
-      "dead_symbol_": "+",
+      "undead_symbol_code_": 122,
       "is_dead_": false,
       "is_immortal_": false
     },
     "Wall": {
-      "max_health_points_": 10000,
-      "undead_symbol_": "#",
+      "health_points_": 10000,
       "dead_symbol_": "_",
+      "dead_symbol_code_": 95,
+      "undead_symbol_": "#",
+      "undead_symbol_code_": 35,
+      "is_dead_": false,
+      "is_immortal_": false
+    },
+    "Princess": {
+      "mana_points_": 150,
+      "visibility_points_": 30,
+      "dead_symbol_": "+",
+      "dead_symbol_code_": 43,
+      "undead_symbol_": "*",
+      "undead_symbol_code_": 42,
+      "is_dead_": false,
+      "is_immortal_": true
+    },
+    "Dragon": {
+      "health_points_": 400,
+      "mana_points_": 300,
+      "damage_points_": 100,
+      "visibility_points_": 25,
+      "dead_symbol_": "+",
+      "dead_symbol_code_": 43,
+      "undead_symbol_": "D",
+      "undead_symbol_code_": 68,
       "is_dead_": false,
       "is_immortal_": false
     }
