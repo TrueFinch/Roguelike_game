@@ -8,6 +8,7 @@
 #include "UserInterface.h"
 #include <Actors.h>
 #include <Map.h>
+#include <Config.h>
 
 namespace game_space {
 
@@ -22,6 +23,7 @@ class Game {
   ui::Loading loading_;
   ui::MainMenu main_menu_;
   map::Map map_;
+  config::Config game_config_;
   int rows_ = 0, cols_ = 0;
 };
 

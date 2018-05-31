@@ -20,8 +20,7 @@ game_space::Game::Game(int rows, int cols) : rows_{rows}, cols_{cols} {
   game_state_ = ui::LOADING;
   loading_ = ui::Loading();
   main_menu_ = ui::MainMenu();
-  map_ = map::Map();
-//  map_.loadMap();
+  game_config_.loadConfig();
 
 }
 
