@@ -15,7 +15,7 @@ void config::Config::loadConfig() {
   for (json::iterator i = json_config.begin(); i != json_config.end(); ++i) {
     if (i.key() == "Actors") {
       json actors_config = *i;
-      for (json::iterator j = actors_config.begin(); i != actors_config.end(); ++j) {
+      for (json::iterator j = actors_config.begin(); j != actors_config.end(); ++j) {
         if (j.key() == "Hero") {
           json hero_config = *j;
           hero_stat_ = stats::HeroStat(hero_config["max_health_points_"].get<int>(),
@@ -92,4 +92,24 @@ void config::Config::loadConfig() {
       }
     }
   }
+}
+
+const stats::HeroStat& config::Config::getHeroStat() const {
+  return hero_stat_;
+}
+
+const stats::ZombieStat& config::Config::getZombieStat() const {
+  return zombie_stat_;
+}
+
+const stats::WallStat& config::Config::getWallStat() const {
+  return wall_stat_;
+}
+
+const stats::PrincessStat& config::Config::getPrincessStat() const {
+  return princess_stat_;
+}
+
+const stats::DragonStat& config::Config::getDragonStat() const {
+  return dragon_stat_;
 }

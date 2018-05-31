@@ -13,7 +13,11 @@ class Config {
  public:
   Config() = default;
   void loadConfig();
-//  const stats::HeroStat& getHeroStat() const;
+  const stats::HeroStat& getHeroStat() const;
+  const stats::ZombieStat& getZombieStat() const;
+  const stats::WallStat& getWallStat() const;
+  const stats::PrincessStat& getPrincessStat() const;
+  const stats::DragonStat& getDragonStat() const;
  private:
   stats::HeroStat hero_stat_;
   stats::PrincessStat princess_stat_;
