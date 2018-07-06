@@ -4,58 +4,37 @@
 
 #include <Map.h>
 #include <utility>
+#include <fstream>
 
-map::Cell::Cell(actors::Point coord, std::shared_ptr<actors::Actor> ptr = nullptr) : coord_{coord},
-                                                                                     ptr_{std::move(ptr)} {}
+map::Cell::Cell(std::shared_ptr<actor::Actor> ptr) : ptr_{std::move(ptr)} {}
 
-void map::Cell::setPointer(std::shared_ptr<actors::Actor> ptr) {
+void map::Cell::setPointer(std::shared_ptr<actor::Actor> ptr) {
   ptr_ = std::move(ptr);
 }
 
-std::shared_ptr<actors::Actor> map::Cell::getPointer() const {
+std::shared_ptr<actor::Actor> map::Cell::getPointer() const {
   return ptr_;
 }
 
-void map::Map::loadMap() {
-  FILE* map = fopen("./map/level1.txt", "rt");
-  int rows = 0, cols = 0;
-  char c;
-  std::shared_ptr<actors::Actor> actor_ptr;
-  fscanf(map, "%i\n%i\n", &rows, &cols);
+//map::Map::Map() {}
 
+void map::Map::loadMap(config::Config& config) {
+  std::ifstream fin("/home/truefinch/CLionProjects/Roguelike_game/map/level1.txt");
+  int rows = 0, cols = 0;
+  std::shared_ptr<actor::Actor> actor_ptr;
+
+  fin >> rows >> cols;
+  std::string str;
   for (int i = 0; i < rows; ++i) {
-    std::vector<Cell> tmp((unsigned long) (cols));
-    for (int j = 0; i < cols; ++j) {
-      fscanf(map, "%c", &c);
-      switch (c) {
-        case '@':
-          actor_ptr = actors::Actor::createActor(actors::HERO_ID, {{'D', 100},
-                                                                   {'M', 100},
-                                                                   {'H', 100},
-                                                                   {'R', i},
-                                                                   {'C', j}});
-          break;
-        case 'z':
-          actor_ptr = actors::Actor::createActor(actors::ZOMBIE_ID, {{'D', 100},
-                                                                     {'H', 100},
-                                                                     {'R', i},
-                                                                     {'C', j}});
-          break;
-        case '#':
-          actor_ptr = actors::Actor::createActor(actors::WALL_ID, {{'H', 100},
-                                                                   {'R', i},
-                                                                   {'C', j}});
-          break;
-        case '.':
-          actor_ptr = nullptr;
-          break;
-      }
-      if (actor_ptr != nullptr) {
-        actors_.push_back(actor_ptr);
-      }
-      tmp.emplace_back({{i, j}, actor_ptr});
+    fin >> str;
+    board_.emplace_back(std::vector<map::Cell>());
+    for (int j = 0; j < cols; ++j) {
+      auto actor_id = (enums::ActorID) str[j];
+      actor_ptr = actor::Actor::createActor(actor_id, config, {(double)i, (double)j});
+      board_[board_.size() - 1].emplace_back(map::Cell(actor_ptr));
     }
-    board_.push_back(tmp);
-    fscanf(map, "\n");
   }
+
+  fin.close();
 }
+

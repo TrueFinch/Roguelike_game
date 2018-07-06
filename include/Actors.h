@@ -6,14 +6,15 @@
 #define ROGUELIKE_ACTOR_H
 
 #include <memory>
-#include <map>
 #include <string>
 #include <Statistics.h>
 #include <Point.h>
+#include <Config.h>
+#include <Enums.h>
 
-namespace actors {
+namespace actor {
 
-enum ActorID {HERO_ID = '@', ZOMBIE_ID = 'z', WALL_ID = '#', PRINCESS_ID = '*', DRAGON_ID = 'D'};
+
 
 class Actor;
 class Hero;
@@ -25,6 +26,7 @@ class Dragon;
 class Actor {
  public:
   Actor() = default;
+//  virtual void setCoord(Point) = 0;
   virtual void collide(Actor&) = 0;
   virtual void collide(Hero&) = 0;
   virtual void collide(Zombie&) = 0;
@@ -34,14 +36,14 @@ class Actor {
 //  virtual void collide(const Potion&) = 0;
 //  virtual void collide(const HealthP&) = 0;
 //  virtual void collide(const ManaP&) = 0;
-    static std::shared_ptr<actors::Actor> createActor(actors::ActorID id, std::shared_ptr<stats::Statistics> st);
+    static std::shared_ptr<actor::Actor> createActor(enums::ActorID, config::Config&, Point);
     virtual ~Actor() = default;
 };
 
 class Hero : public stats::HeroStat, public Actor {
  public:
   Hero() = default;
-  explicit Hero(std::shared_ptr<stats::HeroStat>);
+  explicit Hero(std::shared_ptr<stats::HeroStat>, Point);
   void collide(Actor&) override;
   void collide(Hero&) override;
   void collide(Zombie&) override;
@@ -53,7 +55,7 @@ class Hero : public stats::HeroStat, public Actor {
 class Zombie : public stats::ZombieStat, public Actor {
  public:
   Zombie() = default;
-  explicit Zombie(std::shared_ptr<stats::ZombieStat>);
+  explicit Zombie(std::shared_ptr<stats::ZombieStat>, Point);
   void collide(Actor&) override;
   void collide(Hero&) override;
   void collide(Zombie&) override;
@@ -65,7 +67,7 @@ class Zombie : public stats::ZombieStat, public Actor {
 class Wall : public stats::WallStat, public Actor{
  public:
   Wall() = default;
-  explicit Wall(std::shared_ptr<stats::WallStat>);
+  explicit Wall(std::shared_ptr<stats::WallStat>, Point);
   void collide(Actor&) override;
   void collide(Hero&) override;
   void collide(Zombie&) override;
@@ -77,7 +79,7 @@ class Wall : public stats::WallStat, public Actor{
  class Princess : public stats::PrincessStat, public Actor {
   public:
    Princess() = default;
-   explicit Princess(std::shared_ptr<stats::PrincessStat>);
+   explicit Princess(std::shared_ptr<stats::PrincessStat>, Point);
    void collide(Actor&) override;
    void collide(Hero&) override;
    void collide(Zombie&) override;
@@ -89,7 +91,7 @@ class Wall : public stats::WallStat, public Actor{
  class Dragon : public stats::DragonStat, public Actor {
   public:
    Dragon() = default;
-   explicit Dragon(std::shared_ptr<stats::DragonStat>);
+   explicit Dragon(std::shared_ptr<stats::DragonStat>, Point);
    void collide(Actor&) override;
    void collide(Hero&) override;
    void collide(Zombie&) override;
@@ -98,6 +100,6 @@ class Wall : public stats::WallStat, public Actor{
    void collide(Dragon&) override;
  };
 
-} // namespace actors
+} // namespace actor
 
 #endif //ROGUELIKE_ACTOR_H

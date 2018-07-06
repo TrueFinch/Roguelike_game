@@ -18,7 +18,7 @@
       "visibility_points_": 4,
       "dead_symbol_": "+",
       "dead_symbol_code_": 43,
-      "undead_symbol_": "z",
+      "undead_symbol_": "Z",
       "undead_symbol_code_": 122,
       "is_dead_": false,
       "is_immortal_": false
@@ -37,7 +37,7 @@
       "visibility_points_": 30,
       "dead_symbol_": "+",
       "dead_symbol_code_": 43,
-      "undead_symbol_": "*",
+      "undead_symbol_": "P",
       "undead_symbol_code_": 42,
       "is_dead_": false,
       "is_immortal_": true
@@ -53,6 +53,15 @@
       "undead_symbol_code_": 68,
       "is_dead_": false,
       "is_immortal_": false
+    }
+  },
+  "Interface": {
+    "Loading": {
+      "greeting_": "WELCOME TO MY ROGUELIKE GAME",
+      "hint_": "Press ENTER to continue or ESCAPE to exit"
+    },
+    "MainMenu": {
+      "menu_items_": ["NEW GAME", "CONTINUE", "EXIT"]
     }
   }
 }

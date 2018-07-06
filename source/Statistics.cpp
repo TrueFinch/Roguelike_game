@@ -3,6 +3,7 @@
 //
 
 #include "Statistics.h"
+#include <utility>
 
 stats::HPStat::HPStat(int max, int cur) : max_health_points_{max}, cur_health_points_{cur} {};
 
@@ -205,3 +206,45 @@ stats::WallStat::WallStat(int max_hp,
                                      SymbolsStat(dead_symbol, undead_symbol),
                                      SpecialFlagsStat(is_dead, is_immortal),
                                      CoordinateStat(p) {}
+
+stats::LoadingStat::LoadingStat(std::string greeting, std::string hint) {
+  greeting_ = std::move(greeting);
+  hint_ = std::move(hint);
+}
+
+void stats::LoadingStat::setGreeting(std::string greeting) {
+  greeting_ = std::move(greeting);
+}
+
+std::string stats::LoadingStat::getGreeting() {
+  return greeting_;
+}
+
+void stats::LoadingStat::setHint(std::string hint) {
+  hint_ = std::move(hint);
+}
+
+std::string stats::LoadingStat::getHint() {
+  return hint_;
+}
+
+stats::MainMenuStat::MainMenuStat(std::vector<std::string> menu_items) {
+  for (const auto& i : menu_items) {
+    menu_items_.push_back(i);
+  }
+}
+
+void stats::MainMenuStat::setMenuItems(std::vector<std::string> menu_items) {
+  for (const auto& i : menu_items) {
+    menu_items_.push_back(i);
+  }
+}
+
+std::vector<std::string> stats::MainMenuStat::getMenuItems() {
+  return menu_items_;
+}
+
+stats::UIStat::UIStat(std::string& greeting,
+                      std::string& hint,
+                      std::vector<std::string>& main_menu) : LoadingStat(greeting, hint),
+                                                            MainMenuStat(main_menu) {}

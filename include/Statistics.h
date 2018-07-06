@@ -1,11 +1,11 @@
 //
 // Created by truefinch on 27.05.18.
 //
-
-#ifndef ROGUELIKE_STATISTICS_H
-#define ROGUELIKE_STATISTICS_H
+#pragma once
 
 #include <Point.h>
+#include <string>
+#include <vector>
 
 namespace stats {
 
@@ -19,7 +19,7 @@ class Statistics {
 class HPStat {
  public:
   HPStat() = default;
-  HPStat(int, int);
+  HPStat(int max, int cur);
   void setMaxHP(int);
   int getMaxHP() const;
   void setCurHP(int);
@@ -33,7 +33,7 @@ class HPStat {
 class MPStat {
  public:
   MPStat() = default;
-  MPStat(int, int);
+  MPStat(int max, int cur);
   void setMaxMP(int);
   int getMaxMP() const;
   void setCurMP(int);
@@ -218,5 +218,37 @@ class WallStat : public Statistics,
            Point p);
 };
 
+class LoadingStat {
+ public:
+  LoadingStat() = default;
+  LoadingStat(std::string greeting, std::string hint);
+  void setGreeting(std::string);
+  std::string getGreeting();
+  void setHint(std::string);
+  std::string getHint();
+ private:
+  std::string greeting_;
+  std::string hint_;
+};
+
+class MainMenuStat {
+ public:
+  MainMenuStat() = default;
+  explicit MainMenuStat(std::vector<std::string> menu_items);
+  void setMenuItems(std::vector<std::string>);
+  std::vector<std::string> getMenuItems();
+ private:
+  std::vector<std::string> menu_items_;
+};
+
+class UIStat : public LoadingStat,
+               public MainMenuStat,
+               public Statistics {
+ public:
+  UIStat() = default;
+  UIStat(std::string& greeting,
+         std::string& hint,
+         std::vector<std::string>& menu_items);
+};
+
 } // namespace stats
-#endif //ROGUELIKE_STATISTICS_H

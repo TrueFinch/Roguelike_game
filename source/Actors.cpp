@@ -7,35 +7,36 @@
 #include <cassert>
 #include <utility>
 
-std::shared_ptr<actors::Actor> actors::Actor::createActor(actors::ActorID id, std::shared_ptr<stats::Statistics> st) {
-  std::shared_ptr<actors::Actor> actor_ptr;
+std::shared_ptr<actor::Actor> actor::Actor::createActor(enums::ActorID id, config::Config& config, Point coord) {
+  std::shared_ptr<actor::Actor> actor_ptr;
 
   switch (id) {
-    case ActorID::HERO_ID:
-      actor_ptr = std::make_shared<actors::Hero>(actors::Hero(std::dynamic_pointer_cast<stats::HeroStat>(st)));
+    case enums::ActorID::HERO_ID:
+      actor_ptr = std::make_shared<actor::Hero>(actor::Hero(config.getHeroStat(), coord));
       break;
-    case ActorID::ZOMBIE_ID:
-      actor_ptr = std::make_shared<actors::Zombie>(actors::Zombie(std::dynamic_pointer_cast<stats::ZombieStat>(st)));
+    case enums::ActorID::ZOMBIE_ID:
+      actor_ptr = std::make_shared<actor::Zombie>(actor::Zombie(config.getZombieStat(), coord));
       break;
-    case ActorID::WALL_ID:
-      actor_ptr = std::make_shared<actors::Wall>(actors::Wall(std::dynamic_pointer_cast<stats::WallStat>(st)));
+    case enums::ActorID::WALL_ID:
+      actor_ptr = std::make_shared<actor::Wall>(actor::Wall(config.getWallStat(), coord));
       break;
-    case ActorID::PRINCESS_ID:
+    case enums::ActorID::PRINCESS_ID:
       actor_ptr =
-          std::make_shared<actors::Princess>(actors::Princess(std::dynamic_pointer_cast<stats::PrincessStat>(st)));
+          std::make_shared<actor::Princess>(actor::Princess(config.getPrincessStat(), coord));
       break;
-    case ActorID::DRAGON_ID:
-      actor_ptr = std::make_shared<actors::Dragon>(actors::Dragon(std::dynamic_pointer_cast<stats::DragonStat>(st)));
+    case enums::ActorID::DRAGON_ID:
+      actor_ptr = std::make_shared<actor::Dragon>(actor::Dragon(config.getDragonStat(), coord));
       break;
-//    default:
-//      assert(false);
-//    case PRINCESS_ID:break;
-//    case DRAGON_ID:break;
+    case enums::ActorID::NOTHING_ID:
+      actor_ptr = nullptr;
+      break;
+    default:
+      assert(false);
   }
   return actor_ptr;
 }
 
-actors::Hero::Hero(std::shared_ptr<stats::HeroStat> new_st) {
+actor::Hero::Hero(std::shared_ptr<stats::HeroStat> new_st, Point coord) {
 //  std::shared_ptr<stats::HeroStat> new_st = std::dynamic_pointer_cast<stats::HeroStat>(st);
   this->setMaxHP(new_st->getMaxHP());
   this->setCurHP(new_st->getCurHP());
@@ -49,34 +50,34 @@ actors::Hero::Hero(std::shared_ptr<stats::HeroStat> new_st) {
   this->setImmortal(new_st->isImmortal());
   this->setDeadSymbol(new_st->getDeadSymbol());
   this->setUndeadSymbol(new_st->getUndeadSymbol());
-  this->setCoord(new_st->getCoord());
+  this->setCoord(coord);
 }
 
-void actors::Hero::collide(actors::Actor& _ca) {
+void actor::Hero::collide(actor::Actor& _ca) {
   _ca.collide(*this);
 }
 
-void actors::Hero::collide(actors::Hero& _ch) {}
+void actor::Hero::collide(actor::Hero& _ch) {}
 
-void actors::Hero::collide(actors::Zombie& _cz) {
+void actor::Hero::collide(actor::Zombie& _cz) {
   this->setCurHP(this->getCurHP() - _cz.getCurDP());
   _cz.setCurHP(_cz.getCurHP() - this->getCurDP());
 }
 
-void actors::Hero::collide(actors::Wall& _cw) {
+void actor::Hero::collide(actor::Wall& _cw) {
   _cw.setCurHP(_cw.getCurHP() - this->getCurDP());
 }
 
-void actors::Hero::collide(actors::Princess&) {
+void actor::Hero::collide(actor::Princess&) {
   //some win event
 }
 
-void actors::Hero::collide(actors::Dragon& _cd) {
+void actor::Hero::collide(actor::Dragon& _cd) {
   this->setCurHP(this->getCurHP() - _cd.getCurDP());
   _cd.setCurHP(_cd.getCurHP() - this->getCurDP());
 }
 
-actors::Zombie::Zombie(std::shared_ptr<stats::ZombieStat> new_st) {
+actor::Zombie::Zombie(std::shared_ptr<stats::ZombieStat> new_st, Point coord) {
   this->setMaxHP(new_st->getMaxHP());
   this->setCurHP(new_st->getCurHP());
   this->setMaxDP(new_st->getMaxDP());
@@ -87,60 +88,60 @@ actors::Zombie::Zombie(std::shared_ptr<stats::ZombieStat> new_st) {
   this->setImmortal(new_st->isImmortal());
   this->setDeadSymbol(new_st->getDeadSymbol());
   this->setUndeadSymbol(new_st->getUndeadSymbol());
-  this->setCoord(new_st->getCoord());
+  this->setCoord(coord);
 }
 
-void actors::Zombie::collide(actors::Actor& _ca) {
+void actor::Zombie::collide(actor::Actor& _ca) {
   _ca.collide(*this);
 }
 
-void actors::Zombie::collide(actors::Hero& _ch) {
+void actor::Zombie::collide(actor::Hero& _ch) {
   _ch.collide(*this);
 }
 
-void actors::Zombie::collide(actors::Zombie& _cz) {}
+void actor::Zombie::collide(actor::Zombie& _cz) {}
 
-void actors::Zombie::collide(actors::Wall& _cv) {}
+void actor::Zombie::collide(actor::Wall& _cv) {}
 
-void actors::Zombie::collide(actors::Princess&) {
+void actor::Zombie::collide(actor::Princess&) {
   //do nothing
 }
 
-void actors::Zombie::collide(actors::Dragon&) {
+void actor::Zombie::collide(actor::Dragon&) {
   //do nothing
 }
 
-actors::Wall::Wall(std::shared_ptr<stats::WallStat> st) {
+actor::Wall::Wall(std::shared_ptr<stats::WallStat> st, Point coord) {
   this->setMaxHP(st->getMaxHP());
   this->setCurHP(st->getCurHP());
   this->setDead(st->isDead());
   this->setImmortal(st->isImmortal());
   this->setDeadSymbol(st->getDeadSymbol());
   this->setUndeadSymbol(st->getUndeadSymbol());
-  this->setCoord(st->getCoord());
+  this->setCoord(coord);
 }
 
-void actors::Wall::collide(actors::Actor& _ca) {
+void actor::Wall::collide(actor::Actor& _ca) {
   _ca.collide(*this);
 }
 
-void actors::Wall::collide(actors::Hero& _ch) {
+void actor::Wall::collide(actor::Hero& _ch) {
   _ch.collide(*this);
 }
 
-void actors::Wall::collide(actors::Zombie& _cz) {
+void actor::Wall::collide(actor::Zombie& _cz) {
   _cz.collide(*this);
 }
 
-void actors::Wall::collide(actors::Wall&) {}
+void actor::Wall::collide(actor::Wall&) {}
 
-void actors::Wall::collide(actors::Princess&) {}
+void actor::Wall::collide(actor::Princess&) {}
 
-void actors::Wall::collide(actors::Dragon&) {
+void actor::Wall::collide(actor::Dragon&) {
   //do nothing
 }
 
-actors::Princess::Princess(std::shared_ptr<stats::PrincessStat> new_st) {
+actor::Princess::Princess(std::shared_ptr<stats::PrincessStat> new_st, Point coord) {
   this->setMaxMP(new_st->getMaxMP());
   this->setCurMP(new_st->getCurMP());
   this->setMaxVP(new_st->getMaxVP());
@@ -149,34 +150,34 @@ actors::Princess::Princess(std::shared_ptr<stats::PrincessStat> new_st) {
   this->setImmortal(new_st->isImmortal());
   this->setDeadSymbol(new_st->getDeadSymbol());
   this->setUndeadSymbol(new_st->getUndeadSymbol());
-  this->setCoord(new_st->getCoord());
+  this->setCoord(coord);
 }
 
-void actors::Princess::collide(actors::Actor& _ca) {
+void actor::Princess::collide(actor::Actor& _ca) {
   _ca.collide(*this);
 }
 
-void actors::Princess::collide(actors::Hero& _ch) {
+void actor::Princess::collide(actor::Hero& _ch) {
   _ch.collide(*this);
 }
 
-void actors::Princess::collide(actors::Zombie& _cz) {
+void actor::Princess::collide(actor::Zombie& _cz) {
   _cz.collide(*this);
 }
 
-void actors::Princess::collide(actors::Wall& _cw) {
+void actor::Princess::collide(actor::Wall& _cw) {
   _cw.collide(*this);
 }
 
-void actors::Princess::collide(actors::Princess&) {
+void actor::Princess::collide(actor::Princess&) {
   //lol it's not possible
 }
 
-void actors::Princess::collide(actors::Dragon&) {
+void actor::Princess::collide(actor::Dragon&) {
   //do nothing
 }
 
-actors::Dragon::Dragon(std::shared_ptr<stats::DragonStat> new_st) {
+actor::Dragon::Dragon(std::shared_ptr<stats::DragonStat> new_st, Point coord) {
   this->setMaxHP(new_st->getMaxHP());
   this->setCurHP(new_st->getCurHP());
   this->setMaxMP(new_st->getMaxMP());
@@ -189,29 +190,29 @@ actors::Dragon::Dragon(std::shared_ptr<stats::DragonStat> new_st) {
   this->setImmortal(new_st->isImmortal());
   this->setDeadSymbol(new_st->getDeadSymbol());
   this->setUndeadSymbol(new_st->getUndeadSymbol());
-  this->setCoord(new_st->getCoord());
+  this->setCoord(coord);
 }
 
-void actors::Dragon::collide(actors::Actor& _ca) {
+void actor::Dragon::collide(actor::Actor& _ca) {
   _ca.collide(*this);
 }
 
-void actors::Dragon::collide(actors::Hero& _ch) {
+void actor::Dragon::collide(actor::Hero& _ch) {
   _ch.collide(*this);
 }
 
-void actors::Dragon::collide(actors::Zombie& _cz) {
+void actor::Dragon::collide(actor::Zombie& _cz) {
   _cz.collide(*this);
 }
 
-void actors::Dragon::collide(actors::Wall& _cw) {
+void actor::Dragon::collide(actor::Wall& _cw) {
   _cw.collide(*this);
 }
 
-void actors::Dragon::collide(actors::Princess& _cp) {
+void actor::Dragon::collide(actor::Princess& _cp) {
   _cp.collide(*this);
 }
 
-void actors::Dragon::collide(actors::Dragon&) {
+void actor::Dragon::collide(actor::Dragon&) {
   //do nothing
 }

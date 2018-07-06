@@ -1,84 +1,46 @@
 //
-// Created by truefinch on 17.05.18.
+// Created by truefinch on 04.06.18.
 //
 
-#include <ncurses.h>
-#include <cstring>
-#include <cassert>
-#include "../include/UserInterface.h"
+#include "UserInterface.h"
 
-ui::GameState ui::Loading::update(int key) {
-  clear();
-  ui::GameState new_state = ui::LOADING;
-  int max_rows = 0, max_cols = 0;
-  getmaxyx(stdscr, max_rows, max_cols);
-  switch (key) {
-    case KEY_ENT:
-      new_state = ui::MAIN_MENU;
-      break;
-    case KEY_ESC:
-      new_state = ui::EXIT;
-      break;
-    default:
-      mvwprintw(stdscr, max_rows / 2, (max_cols - (int) greeting_msg_.length()) / 2, "%s", greeting_msg_.c_str());
-      mvwprintw(stdscr, max_rows - 1, 0, "Press ENTER to continue or ESCAPE to exit");
-      break;
-  }
-  refresh();
-  return new_state;
+ui::UserInterface::UserInterface(stats::UIStat stat) {
+  game_state_ = enums::LOADING;
+  loading_.setGreeting(stat.getGreeting());
+  loading_.setHint(stat.getHint());
+  main_menu_.setMenuItems(stat.getMenuItems());
+//  loading_ = game_screen::Loading();
+//  main_menu_ = game_screen::MainMenu();
+//  game_field_ = game_screen::GameField();
 }
 
-ui::GameState ui::MainMenu::update(int key) {
-  clear();
-  ui::GameState new_state = MAIN_MENU;
-  int max_rows = 0, max_cols = 0;
-  getmaxyx(stdscr, max_rows, max_cols);
-  switch (key) {
-    case KEY_UP:
-      if (chosen_ > 0) {
-        --chosen_;
+enums::GameState ui::UserInterface::update(int key) {
+  switch (game_state_) {
+    case enums::LOADING:
+      game_state_ = loading_.update(key);
+      if (game_state_ == enums::MAIN_MENU) {
+        main_menu_.update(ERR);
       }
       break;
-    case KEY_DOWN:
-      if (chosen_ < menu_items_.size() - 1)
-        ++chosen_;
+    case enums::MAIN_MENU:
+      game_state_ = main_menu_.update(key);
       break;
-    case KEY_ESC:new_state = ui::EXIT;
+    case enums::SETTINGS:
       break;
-    case KEY_ENT:
-      switch (chosen_) {
-        case 0:new_state = ui::GAME_FIELD;
-          break;
-        case 1:new_state = ui::SETTINGS;
-          break;
-        case 2:new_state = ui::EXIT;
-          break;
-        default:assert(false);
-          break;
-      }
+    case enums::EXIT:
       break;
-    default: break;
-  }
-  for (auto i = 0; i < menu_items_.size(); ++i) {
-    if (i == chosen_) {
-      mvaddch(max_rows / 2 + i, ((max_cols - menu_items_[i].size()) / 2), '>');
-    } else {
-      mvaddch(max_rows / 2 + i, ((max_cols - menu_items_[i].size()) / 2), ' ');
-    }
-    mvprintw(max_rows / 2 + i, (int) ((max_cols - menu_items_[i].size()) / 2) + 1, "%s\n", menu_items_[i].c_str());
-  }
-  refresh();
-  return new_state;
-}
-
-ui::GameState ui::GameField::update(int key) {
-  clear();
-  ui::GameState new_state = ui::GAME_FIELD;
-  int max_rows = 0, max_cols = 0;
-  getmaxyx(stdscr, max_rows, max_cols);
-  switch (key) {
-    case KEY_ESC:
+      break;
+    case enums::GAME_FIELD:
+      break;
   }
 
-  return new_state;
 }
+
+enums::GameState ui::UserInterface::getGameState() const {
+  return game_state_;
+}
+
+void ui::UserInterface::setGameState(enums::GameState new_game_state) {
+  game_state_ = new_game_state;
+}
+

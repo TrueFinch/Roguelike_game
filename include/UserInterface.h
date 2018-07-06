@@ -1,57 +1,31 @@
 //
-// Created by truefinch on 17.05.18.
+// Created by truefinch on 04.06.18.
 //
 
-#ifndef ROGUELIKE_USERINTERFACE_H
-#define ROGUELIKE_USERINTERFACE_H
+#pragma once
 
-#include <string>
-#include <vector>
+#include <ncurses.h>
+#include <Screens.h>
+#include <Enums.h>
+#include <Config.h>
+#include <Statistics.h>
 
 namespace ui {
 
-#define KEY_ENT 10
-#define KEY_ESC 27
-
-enum GameState { LOADING = 0, MAIN_MENU, SETTINGS, EXIT, GAME_FIELD, PAUSE};
-
-class Screen {
+class UserInterface{
  public:
-  Screen() = default;
-  virtual GameState update(int key) = 0;
-  ~Screen() = default;
-};
-
-class Loading: public Screen {
- public:
-  Loading() = default;
-  GameState update(int key) override;
+  UserInterface() = default;
+  explicit UserInterface(stats::UIStat stat);
+  enums::GameState update(int key);
+//  void updateMap()
+  enums::GameState getGameState() const;
+  void setGameState(enums::GameState);
  private:
-  std::string greeting_msg_ = "WELCOME TO MY ROGUELIKE GAME";
-};
-
-class MainMenu : public Screen {
- public:
-  MainMenu() = default;
-  GameState update(int key) override;
- private:
-  std::vector<std::string> menu_items_{"NEW GAME", "SETTINGS", "EXIT"};
-  int chosen_ = 0;
-};
-
-class GameField : public Screen {
- public:
-  GameField() = default;
-  GameState update(int key) override;
- private:
-  std::vector<std::string> map_;
-  int damage_points_ = 0;
-  int cur_mana_points_ = 0;
-  int max_mana_points_ = 0;
-  int cur_health_points_ = 0;
-  int max_health_points_ = 0;
+  enums::GameState game_state_;
+  game_screen::Loading loading_;
+  game_screen::MainMenu main_menu_;
+  game_screen::GameField game_field_;
+  std::vector<std::vector<char>> map_view_;
 };
 
 } // namespace ui
-
-#endif //ROGUELIKE_USERINTERFACE_H
