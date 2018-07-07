@@ -6,6 +6,7 @@
 #include <cstring>
 #include <cassert>
 #include "Screens.h"
+#include <algorithm>
 
 #define KEY_ENT 10
 #define KEY_ESC 27
@@ -23,10 +24,10 @@ enums::GameState game_screen::Loading::update(int key) {
       new_state = enums::EXIT;
       break;
     default:
-      mvwprintw(stdscr, max_rows / 2, (max_cols - (int) getGreeting().length()) / 2, "%s", getGreeting().c_str());
-      mvwprintw(stdscr, max_rows - 1, 0, getHint().c_str());
       break;
   }
+  mvwprintw(stdscr, max_rows / 2, (max_cols - (int) getGreeting().length()) / 2, "%s", getGreeting().c_str());
+  mvwprintw(stdscr, max_rows - 1, 0, getHint().c_str());
   refresh();
   return new_state;
 }
@@ -74,7 +75,7 @@ enums::GameState game_screen::MainMenu::update(int key) {
     } else {
       mvaddch(max_rows / 2 + i, ((max_cols - getMenuItems()[i].size()) / 2), ' ');
     }
-    mvprintw(max_rows / 2 + i, (int) ((max_cols - getMenuItems()[i].size()) / 2) + 1, "%s\n", getMenuItems()[i].c_str());
+    mvprintw(max_rows /2 + i, ((max_cols - getMenuItems()[i].size()) / 2) + 1, "%s\n", getMenuItems()[i].c_str());
   }
   refresh();
   return new_state;
@@ -83,12 +84,31 @@ enums::GameState game_screen::MainMenu::update(int key) {
 enums::GameState game_screen::GameField::update(int key) {
   clear();
   enums::GameState new_state = enums::GAME_FIELD;
-  int max_rows = 0, max_cols = 0;
+  int max_rows = 0, max_cols = 0, map_rows = (int) map_.size(), map_cols = (int) map_.begin()->size();
   getmaxyx(stdscr, max_rows, max_cols);
   switch (key) {
     case KEY_ESC:
       new_state = enums::MAIN_MENU;
+      break;
+    default:
+      break;
   }
-
+//  for (int i = 0; i < map_rows; ++i) {
+//    mvprintw(max_rows / 2 - map_rows / 2, max_cols / 2 - map_cols / 2, map_[i].c_str());
+//  }
+  mvaddch(max_rows / 2, max_cols / 2, map_[(int) hero_pos_.x][(int) hero_pos_.y]);
+  for (int i = 0; i < std::min(map_rows, max_rows); ++i) {
+    for (int j = 0; j < std::min(map_cols, max_cols); ++j) {
+      mvaddch(max_rows / 2 - (int) hero_pos_.x + i, max_cols / 2 - (int) hero_pos_.y + j, map_[i][j]);
+    }
+  }
+//  mvprintw((int)hero_pos_.x, (int)hero_pos_.y, map[hero_pos_.x][hero_pos_.y]);
+//  for (int i = 0;)
   return new_state;
+}
+
+enums::GameState game_screen::GameField::updateMap(const std::shared_ptr<std::vector<std::string>> new_map,
+                                                   Point hero_pos) {
+  this->hero_pos_ = hero_pos;
+  this->map_ = *new_map;
 }

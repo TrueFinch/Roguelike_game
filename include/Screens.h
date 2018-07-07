@@ -7,6 +7,7 @@
 #include <vector>
 #include <Enums.h>
 #include <Statistics.h>
+#include <memory>
 
 namespace game_screen {
 
@@ -23,7 +24,7 @@ class Loading : public Screen, public stats::LoadingStat {
   enums::GameState update(int key) override;
 };
 
-class MainMenu : public Screen, public stats::MainMenuStat{
+class MainMenu : public Screen, public stats::MainMenuStat {
  public:
   MainMenu() = default;
   enums::GameState update(int key) override;
@@ -35,7 +36,9 @@ class GameField : public Screen {
  public:
   GameField() = default;
   enums::GameState update(int key) override;
+  enums::GameState updateMap(std::shared_ptr<std::vector<std::string>>, Point hero_pos);
  private:
+  Point hero_pos_ = {0, 0};
   std::vector<std::string> map_;
   int damage_points_ = 0;
   int cur_mana_points_ = 0;
