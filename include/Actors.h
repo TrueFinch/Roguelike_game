@@ -14,19 +14,21 @@
 
 namespace actor {
 
-
-
 class Actor;
+
 class Hero;
+
 class Zombie;
+
 class Wall;
+
 class Princess;
+
 class Dragon;
 
 class Actor {
  public:
   Actor() = default;
-//  virtual void setCoord(Point) = 0;
   virtual void collide(Actor&) = 0;
   virtual void collide(Hero&) = 0;
   virtual void collide(Zombie&) = 0;
@@ -36,8 +38,13 @@ class Actor {
 //  virtual void collide(const Potion&) = 0;
 //  virtual void collide(const HealthP&) = 0;
 //  virtual void collide(const ManaP&) = 0;
-    static std::shared_ptr<actor::Actor> createActor(enums::ActorID, config::Config&, Point);
-    virtual ~Actor() = default;
+  virtual std::string sayName() const = 0;
+  virtual enums::ActorID sayID() const = 0;
+//  virtual char getDeadSymbol() const = 0;
+//  virtual char getUndeadSymbol() const = 0;
+//  virtual bool isDead() const = 0;
+  static std::shared_ptr<actor::Actor> createActor(enums::ActorID, config::Config&, Point);
+  virtual ~Actor() = default;
 };
 
 class Hero : public stats::HeroStat, public Actor {
@@ -50,6 +57,11 @@ class Hero : public stats::HeroStat, public Actor {
   void collide(Wall&) override;
   void collide(Princess&) override;
   void collide(Dragon&) override;
+  std::string sayName() const override;
+  enums::ActorID sayID() const override;
+ private:
+  const std::string NAME = "Hero";
+  const enums::ActorID ID = enums::HERO_ID;
 };
 
 class Zombie : public stats::ZombieStat, public Actor {
@@ -62,9 +74,14 @@ class Zombie : public stats::ZombieStat, public Actor {
   void collide(Wall&) override;
   void collide(Princess&) override;
   void collide(Dragon&) override;
+  std::string sayName() const override;
+  enums::ActorID sayID() const override;
+ private:
+  const std::string NAME = "Zombie";
+  const enums::ActorID ID = enums::ZOMBIE_ID;
 };
 
-class Wall : public stats::WallStat, public Actor{
+class Wall : public stats::WallStat, public Actor {
  public:
   Wall() = default;
   explicit Wall(std::shared_ptr<stats::WallStat>, Point);
@@ -74,31 +91,61 @@ class Wall : public stats::WallStat, public Actor{
   void collide(Wall&) override;
   void collide(Princess&) override;
   void collide(Dragon&) override;
+  std::string sayName() const override;
+  enums::ActorID sayID() const override;
+ private:
+  const std::string NAME = "Wall";
+  const enums::ActorID ID = enums::WALL_ID;
 };
 
- class Princess : public stats::PrincessStat, public Actor {
-  public:
-   Princess() = default;
-   explicit Princess(std::shared_ptr<stats::PrincessStat>, Point);
-   void collide(Actor&) override;
-   void collide(Hero&) override;
-   void collide(Zombie&) override;
-   void collide(Wall&) override;
-   void collide(Princess&) override;
-   void collide(Dragon&) override;
- };
+class Princess : public stats::PrincessStat, public Actor {
+ public:
+  Princess() = default;
+  explicit Princess(std::shared_ptr<stats::PrincessStat>, Point);
+  void collide(Actor&) override;
+  void collide(Hero&) override;
+  void collide(Zombie&) override;
+  void collide(Wall&) override;
+  void collide(Princess&) override;
+  void collide(Dragon&) override;
+  std::string sayName() const override;
+  enums::ActorID sayID() const override;
+ private:
+  const std::string NAME = "Princess";
+  const enums::ActorID ID = enums::PRINCESS_ID;
+};
 
- class Dragon : public stats::DragonStat, public Actor {
-  public:
-   Dragon() = default;
-   explicit Dragon(std::shared_ptr<stats::DragonStat>, Point);
-   void collide(Actor&) override;
-   void collide(Hero&) override;
-   void collide(Zombie&) override;
-   void collide(Wall&) override;
-   void collide(Princess&) override;
-   void collide(Dragon&) override;
- };
+class Dragon : public stats::DragonStat, public Actor {
+ public:
+  Dragon() = default;
+  explicit Dragon(std::shared_ptr<stats::DragonStat>, Point);
+  void collide(Actor&) override;
+  void collide(Hero&) override;
+  void collide(Zombie&) override;
+  void collide(Wall&) override;
+  void collide(Princess&) override;
+  void collide(Dragon&) override;
+  std::string sayName() const override;
+  enums::ActorID sayID() const override;
+ private:
+  const std::string NAME = "Dragon";
+  const enums::ActorID ID = enums::DRAGON_ID;
+};
+//
+//class HealthPotion: public Actor {
+// public:
+//  HealthPotion() = default;
+//  explicit HealthPotion(std::shared_ptr<stats::DragonStat>, Point);
+//  void collide(Actor&) override;
+//  void collide(Hero&) override;
+//  void collide(Zombie&) override;
+//  void collide(Wall&) override;
+//  void collide(Princess&) override;
+//  void collide(Dragon&) override;
+//  std::string sayName() const override;
+// private:
+//  const std::string NAME = "Dragon";
+//};
 
 } // namespace actor
 
