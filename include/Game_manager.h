@@ -18,7 +18,9 @@ class Game_manager {
 //  void loadMap
 //  std::shared_ptr<config::Config> getConfiguration() const;
  private:
-//  enums::GameState game_state_;
+  enums::GameState game_state_;
+  std::vector<std::shared_ptr<actor::Actor>> npc_;
+  std::shared_ptr<actor::Hero> hero_ptr_;
   ui::UserInterface ui_;
   config::Config game_config_;
   map::Map map_;
