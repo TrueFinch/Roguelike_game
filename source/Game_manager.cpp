@@ -9,30 +9,44 @@
 game::Game_manager::Game_manager(int rows, int cols) : rows_{rows}, cols_{cols} {
   game_config_.loadConfig();
   ui_ = ui::UserInterface(*game_config_.getUIStat());
+  hero_ptr_ = map_.loadMap(npc_, game_config_);
+  game_state_ = enums::LOADING;
+  std::shared_ptr<std::vector<std::string>> a = map_.getMapView();
 
   initscr();
   clear();
-//  raw();
   cbreak();
   keypad(stdscr, true);
   noecho();
   curs_set(0);
   halfdelay(1);
   resize_term(rows, cols);
-
-//  loading_ = game_screen::Loading();
-//  main_menu_ = game_screen::MainMenu();
-  map_.loadMap(game_config_);
-
 }
 
 void game::Game_manager::start() {
   int key = ERR;
 //  game_state_ = loading_.update(key);
 
-  while (ui_.getGameState() != enums::EXIT) {
+  while (game_state_ != enums::EXIT) {
     key = getch();
-    ui_.update(key);
+    if (key != ERR) {
+      switch (key) {
+        case KEY_UP:
+          break;
+        case KEY_DOWN:
+          break;
+        case KEY_RIGHT:
+          break;
+        case KEY_LEFT:
+          break;
+        default:
+          break;
+      }
+      if (game_state_ == enums::GAME_FIELD) {
+        ui_.updateMap(map_.getMapView(), hero_ptr_->getCoord());
+      }
+    }
+    game_state_ = ui_.update(game_state_, key);
   }
   finish();
 }

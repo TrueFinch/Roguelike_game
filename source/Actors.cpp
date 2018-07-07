@@ -21,8 +21,7 @@ std::shared_ptr<actor::Actor> actor::Actor::createActor(enums::ActorID id, confi
       actor_ptr = std::make_shared<actor::Wall>(actor::Wall(config.getWallStat(), coord));
       break;
     case enums::ActorID::PRINCESS_ID:
-      actor_ptr =
-          std::make_shared<actor::Princess>(actor::Princess(config.getPrincessStat(), coord));
+      actor_ptr = std::make_shared<actor::Princess>(actor::Princess(config.getPrincessStat(), coord));
       break;
     case enums::ActorID::DRAGON_ID:
       actor_ptr = std::make_shared<actor::Dragon>(actor::Dragon(config.getDragonStat(), coord));
@@ -77,6 +76,14 @@ void actor::Hero::collide(actor::Dragon& _cd) {
   _cd.setCurHP(_cd.getCurHP() - this->getCurDP());
 }
 
+std::string actor::Hero::sayName() const {
+  return this->NAME;
+}
+
+enums::ActorID actor::Hero::sayID() const {
+  return this->ID;
+}
+
 actor::Zombie::Zombie(std::shared_ptr<stats::ZombieStat> new_st, Point coord) {
   this->setMaxHP(new_st->getMaxHP());
   this->setCurHP(new_st->getCurHP());
@@ -99,9 +106,13 @@ void actor::Zombie::collide(actor::Hero& _ch) {
   _ch.collide(*this);
 }
 
-void actor::Zombie::collide(actor::Zombie& _cz) {}
+void actor::Zombie::collide(actor::Zombie& _cz) {
+  //do nothing
+}
 
-void actor::Zombie::collide(actor::Wall& _cv) {}
+void actor::Zombie::collide(actor::Wall& _cv) {
+  //do nothing
+}
 
 void actor::Zombie::collide(actor::Princess&) {
   //do nothing
@@ -109,6 +120,14 @@ void actor::Zombie::collide(actor::Princess&) {
 
 void actor::Zombie::collide(actor::Dragon&) {
   //do nothing
+}
+
+std::string actor::Zombie::sayName() const {
+  return this->NAME;
+}
+
+enums::ActorID actor::Zombie::sayID() const {
+  return this->ID;
 }
 
 actor::Wall::Wall(std::shared_ptr<stats::WallStat> st, Point coord) {
@@ -133,12 +152,24 @@ void actor::Wall::collide(actor::Zombie& _cz) {
   _cz.collide(*this);
 }
 
-void actor::Wall::collide(actor::Wall&) {}
+void actor::Wall::collide(actor::Wall&) {
+  //do nothing
+}
 
-void actor::Wall::collide(actor::Princess&) {}
+void actor::Wall::collide(actor::Princess&) {
+  //do nothing
+}
 
 void actor::Wall::collide(actor::Dragon&) {
   //do nothing
+}
+
+std::string actor::Wall::sayName() const {
+  return this->NAME;
+}
+
+enums::ActorID actor::Wall::sayID() const {
+  return this->ID;
 }
 
 actor::Princess::Princess(std::shared_ptr<stats::PrincessStat> new_st, Point coord) {
@@ -175,6 +206,14 @@ void actor::Princess::collide(actor::Princess&) {
 
 void actor::Princess::collide(actor::Dragon&) {
   //do nothing
+}
+
+std::string actor::Princess::sayName() const {
+  return this->NAME;
+}
+
+enums::ActorID actor::Princess::sayID() const {
+  return this->ID;
 }
 
 actor::Dragon::Dragon(std::shared_ptr<stats::DragonStat> new_st, Point coord) {
@@ -215,4 +254,12 @@ void actor::Dragon::collide(actor::Princess& _cp) {
 
 void actor::Dragon::collide(actor::Dragon&) {
   //do nothing
+}
+
+std::string actor::Dragon::sayName() const {
+  return this->NAME;
+}
+
+enums::ActorID actor::Dragon::sayID() const {
+  return this->ID;
 }
