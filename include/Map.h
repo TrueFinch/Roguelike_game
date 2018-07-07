@@ -26,10 +26,10 @@ class Map {
  public:
   Map() = default;
 //  Map();
-  void loadMap(config::Config&);
+  std::shared_ptr<actor::Hero> loadMap(std::vector<std::shared_ptr<actor::Actor>>& npc, config::Config&);
 //  std::vector<std::string> getArea(const actor::Point& coord, const int radius) const;
+  std::shared_ptr<std::vector<std::string>> getMapView() const;
  private:
-  std::vector<actor::Actor> actors_;
   std::vector<std::vector<map::Cell>> board_;
 };
 
