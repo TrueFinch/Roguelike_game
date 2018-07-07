@@ -16,12 +16,9 @@ class UserInterface{
  public:
   UserInterface() = default;
   explicit UserInterface(stats::UIStat stat);
-  enums::GameState update(int key);
-//  void updateMap()
-  enums::GameState getGameState() const;
-  void setGameState(enums::GameState);
+  enums::GameState update(enums::GameState game_state, int key);
+  void updateMap(std::shared_ptr<std::vector<std::string>> map, Point hero_pos);
  private:
-  enums::GameState game_state_;
   game_screen::Loading loading_;
   game_screen::MainMenu main_menu_;
   game_screen::GameField game_field_;
