@@ -8,9 +8,7 @@
       "dead_symbol_": "~",
       "dead_symbol_code_": 126,
       "undead_symbol_": "@",
-      "undead_symbol_code_": 64,
-      "is_dead_": false,
-      "is_immortal_": false
+      "undead_symbol_code_": 64
     },
     "Zombie": {
       "health_points_": 50,
@@ -19,18 +17,14 @@
       "dead_symbol_": "+",
       "dead_symbol_code_": 43,
       "undead_symbol_": "Z",
-      "undead_symbol_code_": 122,
-      "is_dead_": false,
-      "is_immortal_": false
+      "undead_symbol_code_": 122
     },
     "Wall": {
       "health_points_": 10000,
       "dead_symbol_": "_",
       "dead_symbol_code_": 95,
       "undead_symbol_": "#",
-      "undead_symbol_code_": 35,
-      "is_dead_": false,
-      "is_immortal_": false
+      "undead_symbol_code_": 35
     },
     "Princess": {
       "mana_points_": 150,
@@ -38,9 +32,7 @@
       "dead_symbol_": "+",
       "dead_symbol_code_": 43,
       "undead_symbol_": "P",
-      "undead_symbol_code_": 80,
-      "is_dead_": false,
-      "is_immortal_": true
+      "undead_symbol_code_": 80
     },
     "Dragon": {
       "health_points_": 400,
@@ -50,9 +42,7 @@
       "dead_symbol_": "+",
       "dead_symbol_code_": 43,
       "undead_symbol_": "D",
-      "undead_symbol_code_": 68,
-      "is_dead_": false,
-      "is_immortal_": false
+      "undead_symbol_code_": 68
     }
   },
   "Interface": {
