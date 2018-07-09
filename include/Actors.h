@@ -97,6 +97,7 @@ class ActiveActor : public Actor {
   enums::CollideResult collide(SpellActor&) override;
   enums::CollideResult collide(CollectableActor&) override;
 
+  virtual Point findTarget() = 0;
   virtual enums::CollideResult move() = 0;
 
   void setIsDead(bool);
@@ -143,7 +144,8 @@ class Hero : public ActiveActor {
 
   enums::CollideResult collide(ActiveActor&) override;
 
-  enums::CollideResult move();
+  Point findTarget() override;
+  enums::CollideResult move() override;
 };
 
 class Zombie : public ActiveActor {
@@ -152,6 +154,8 @@ class Zombie : public ActiveActor {
       : ActiveActor(position, is_dead, is_immortal, "Zombie", enums::ZOMBIE_ID, symbol, hp, mp, dp, vp, lp, sp) {};
 
   enums::CollideResult collide(ActiveActor&) override;
+  Point findTarget() override;
+  enums::CollideResult move() override;
 };
 
 class Dragon : public ActiveActor {
@@ -160,6 +164,8 @@ class Dragon : public ActiveActor {
       : ActiveActor(position, is_dead, is_immortal, "Dragon", enums::DRAGON_ID, symbol, hp, mp, dp, vp, lp, sp) {};
 
   enums::CollideResult collide(ActiveActor&) override;
+  Point findTarget() override;
+  enums::CollideResult move() override;
 };
 
 class Princess : public ActiveActor {
@@ -168,6 +174,8 @@ class Princess : public ActiveActor {
       : ActiveActor(position, is_dead, is_immortal, "Princess", enums::PRINCESS_ID, symbol, hp, mp, dp, vp, lp, sp) {};
 
   enums::CollideResult collide(ActiveActor&) override;
+  Point findTarget() override;
+  enums::CollideResult move() override;
 };
 
 class SpellActor : public ActiveActor {
@@ -178,6 +186,8 @@ class SpellActor : public ActiveActor {
         direction_{direction} {};
 
   virtual enums::CollideResult collide(ActiveActor&) = 0;
+  Point findTarget() override;
+  virtual enums::CollideResult move() = 0;
 
   void setDirection(Point);
   Point getDirection() const;
@@ -193,6 +203,7 @@ class Fireball : public SpellActor {
                    hp, mp, dp, vp, lp, sp, direction) {};
 
   enums::CollideResult collide(ActiveActor&) override;
+  enums::CollideResult move() override;
 };
 
 class PassiveActor : public Actor {
