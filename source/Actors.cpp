@@ -124,6 +124,11 @@ int actor::ActiveActor::getVisibilityPoints() const {
 
 void actor::ActiveActor::upLevelPoints() {
   ++level_points_;
+  this->setMaxHealthPoints(max_health_points_ + max_health_points_ * level_points_ / 10);
+  this->setCurHealthPoints(max_health_points_);
+  this->setMaxManaPoints(max_mana_points_ + max_mana_points_ * level_points_ / 10);
+  this->setCurManaPoints(max_mana_points_);
+  this->setMaxScorePoints(max_score_points_ + max_score_points_ * level_points_ / 10);
 }
 
 void actor::ActiveActor::downLevelPoints() {
@@ -138,15 +143,16 @@ int actor::ActiveActor::getLevelPoints() const {
   return level_points_;
 }
 
+void actor::ActiveActor::setLevelPoints(int lp) {
+  for(int i = 1; i <= lp; ++i) {
+    this->upLevelPoints();
+  }
+}
+
 void actor::ActiveActor::setCurScorePoints(int sp) {
   cur_score_points_ = sp;
   while (cur_score_points_ >= max_score_points_) {
     this->upLevelPoints();
-    this->setMaxHealthPoints(max_health_points_ + max_health_points_ * level_points_ / 10);
-    this->setCurHealthPoints(max_health_points_);
-    this->setMaxManaPoints(max_mana_points_ + max_mana_points_ * level_points_ / 10);
-    this->setCurManaPoints(max_mana_points_);
-    this->setMaxScorePoints(max_score_points_ + max_score_points_ * level_points_ / 10);
     cur_score_points_ -= max_score_points_;
   }
 }

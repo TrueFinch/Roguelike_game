@@ -100,6 +100,7 @@ class ActiveActor : public Actor {
   void upLevelPoints();
   void downLevelPoints();
   int getLevelPoints() const;
+  void setLevelPoints(int);
   void setMaxScorePoints(int);
   int getMaxScorePoints() const;
   void setCurScorePoints(int);
