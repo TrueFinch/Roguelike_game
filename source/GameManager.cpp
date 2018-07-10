@@ -15,10 +15,10 @@ void game::GameManager::Init(int rows, int cols) {
   rows_ = rows;
   cols_ = cols;
   game_config_.loadConfig();
-  ui_ = ui::UserInterface(*game_config_.getUIStat());
-  hero_ptr_ = map_.loadMap(actors_, game_config_);
+//  ui_ = ui::UserInterface(*game_config_.getUIStat());
+//  hero_ptr_ = map::Map::Instance().loadMap(actors_, game_config_);
   game_state_ = enums::LOADING;
-  std::shared_ptr<std::vector<std::string>> a = map_.getMapView();
+  std::shared_ptr<std::vector<std::string>> a = map::Map::Instance().getMapView();
 
   initscr();
   clear();
@@ -30,6 +30,8 @@ void game::GameManager::Init(int rows, int cols) {
   resize_term(rows, cols);
 }
 
+
+
 void game::GameManager::Start() {
   int key = ERR;
 //  game_state_ = loading_.update(key);
@@ -39,22 +41,6 @@ void game::GameManager::Start() {
     if (key != ERR) {
       if (game_state_ == enums::GAME_FIELD) {
         Point direction;
-        switch (key) {
-          case KEY_UP:
-            direction = {-1, 0};
-            break;
-          case KEY_DOWN:
-            direction = {1, 0};
-            break;
-          case KEY_RIGHT:
-            direction = {0, 1};
-            break;
-          case KEY_LEFT:
-            direction = {0, -1};
-            break;
-          default:
-            break;
-        }
         for (const auto& actor : actors_) {
 
         }
@@ -69,6 +55,22 @@ void game::GameManager::Start() {
 void game::GameManager::Finish() {
   clear();
   endwin();
+}
+
+std::vector<std::vector<std::shared_ptr<map::Cell>>> game::GameManager::getArea() const {
+  return std::vector<std::vector<std::shared_ptr<map::Cell>>>();
+}
+
+void game::GameManager::setLastPressedKey(int) {
+
+}
+
+int game::GameManager::getLastPressedKey() const {
+  return 0;
+}
+
+void game::GameManager::swap(Point a, Point b) const {
+
 }
 //std::shared_ptr<config::Config> game::GameManager::getConfiguration() const {
 //  return std::make_shared<config::Config>(game_config_);

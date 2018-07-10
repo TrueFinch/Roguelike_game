@@ -4,9 +4,10 @@
 #pragma once
 
 #include <UserInterface.h>
+#include <Config.h>
 #include <Actors.h>
 #include <Map.h>
-#include <Config.h>
+#include <ActorFactory.h>
 
 namespace game {
 
@@ -16,8 +17,11 @@ class GameManager {
   void Init(int rows, int cols);
   void Start();
   void Finish();
-//  void loadMap
-//  std::shared_ptr<config::Config> getConfiguration() const;
+
+  std::vector<std::vector<std::shared_ptr<map::Cell>>> getArea() const;
+  void setLastPressedKey(int);
+  int getLastPressedKey() const;
+  void swap(Point a, Point b) const;
  private:
   GameManager() = default;
   ~GameManager() = default;
@@ -27,10 +31,10 @@ class GameManager {
 
   enums::GameState game_state_ = enums::LOADING;
   std::vector<std::shared_ptr<actor::Actor>> actors_;
-  std::shared_ptr<actor::Hero> hero_ptr_;
   ui::UserInterface ui_;
   config::Config game_config_;
-  map::Map map_;
+
+
 
   int rows_ = 0, cols_ = 0;
 };
