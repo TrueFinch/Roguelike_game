@@ -41,12 +41,12 @@ enums::CollideResult Zombie::move() {
     case enums::FIGHT: {
       std::shared_ptr<actor::ActiveActor> enemy = std::static_pointer_cast<actor::ActiveActor>(other);
       enemy->setCurHealthPoints(enemy->getCurHealthPoints() - this->getDamagePoints());
-      this->setCurScorePoints(enemy->getLevelPoints() * 10);
+      this->setCurScorePoints(this->cur_score_points_ + enemy->getLevelPoints() * 10);
       if (enemy->getIsDead()) {
         game::GameManager::Instance().swap(zombie_pos, other_pos);
       } else {
         this->setCurHealthPoints(this->getCurHealthPoints() - enemy->getDamagePoints());
-        enemy->setCurScorePoints(this->level_points_ * 10);
+        enemy->setCurScorePoints(enemy->getCurScorePoints() + this->level_points_ * 10);
       }
       break;
     }

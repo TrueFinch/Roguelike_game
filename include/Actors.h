@@ -13,8 +13,6 @@
 #include <Config.h>
 #include <Enums.h>
 
-// TODO: add a separate initialization of field represents hp, mp, sp
-
 namespace actor {
 
 class Actor;
@@ -29,8 +27,9 @@ class CollectableActor;
 
 class Actor {
  public:
-  Actor(Point position, bool is_immortal, std::string name, enums::ActorID id, char symbol)
-      : pos_{position}, is_immortal_{is_immortal}, name_{std::move(name)}, id_{id}, symbol_{symbol} {};
+  Actor(Point position, bool is_immortal, std::string name, enums::ActorID id, char live_symbol, char dead_symbol)
+      : pos_{position}, is_immortal_{is_immortal}, name_{std::move(name)},
+        id_{id}, live_symbol_{live_symbol}, dead_symbol_{dead_symbol} {};
   virtual ~Actor() = default;
 
   virtual enums::CollideResult collide(Actor&) = 0;
@@ -53,24 +52,26 @@ class Actor {
   bool is_immortal_;
   std::string name_;
   enums::ActorID id_;
-  char symbol_;
+  char live_symbol_;
+  char dead_symbol_;
 };
 
 class ActiveActor : public Actor {
  public:
-  ActiveActor(Point position, bool is_dead, bool is_immortal, std::string name,
-              enums::ActorID id, char symbol, int hp, int mp, int dp, int vp, int lp, int sp)
-      : Actor(position, is_immortal, std::move(name), id, symbol),
+  ActiveActor(Point position, bool is_dead, bool is_immortal, const std::string& name, enums::ActorID id,
+              char live_symbol, char dead_symbol,
+              int max_hp, int cur_hp, int max_mp, int cur_mp, int dp, int vp, int lp, int max_sp, int cur_sp)
+      : Actor(position, is_immortal, name, id, live_symbol, dead_symbol),
         is_dead_{is_dead},
-        max_health_points_{hp},
-        cur_health_points_{hp},
-        max_mana_points_{mp},
-        cur_mana_points_{mp},
+        max_health_points_{max_hp},
+        cur_health_points_{cur_hp},
+        max_mana_points_{max_mp},
+        cur_mana_points_{cur_mp},
         damage_points_{dp},
         visibility_points_{vp},
         level_points_{lp},
-        max_score_points_{sp},
-        cur_score_points_{sp} {};
+        max_score_points_{max_sp},
+        cur_score_points_{cur_sp} {};
   ~ActiveActor() override = default;
 
   enums::CollideResult collide(Actor&) override;
@@ -104,8 +105,6 @@ class ActiveActor : public Actor {
   void setCurScorePoints(int);
   int getCurScorePoints() const;
 
-//  static std::shared_ptr<actor::ActiveActor> createActor(enums::ActorID, config::Config&, Point);
-
  protected:
   bool is_dead_;
   int max_health_points_;
@@ -121,10 +120,10 @@ class ActiveActor : public Actor {
 
 class SpellActor : public ActiveActor {
  public:
-  SpellActor(Point position, bool is_dead, bool is_immortal, std::string name, enums::ActorID id, char symbol,
-             int hp, int mp, int dp, int vp, int lp, int sp, Point direction)
-      : ActiveActor(position, is_dead, is_immortal, std::move(name), id, symbol, hp, mp, dp, vp, lp, sp),
-        direction_{direction} {};
+  SpellActor(Point position, bool is_dead, bool is_immortal, const std::string& name, enums::ActorID id,
+             char live_symbol, char dead_symbol, int hp, int mp, int dp, int vp, int lp, int sp, Point direction)
+      : ActiveActor(position, is_dead, is_immortal, name, id, live_symbol, dead_symbol,
+                    hp, hp, mp, mp, dp, vp, lp, sp, 0), direction_{direction} {};
 
   virtual enums::CollideResult collide(ActiveActor&) = 0;
   Point findTarget() override;
@@ -139,8 +138,9 @@ class SpellActor : public ActiveActor {
 
 class PassiveActor : public Actor {
  public:
-  PassiveActor(Point position, bool is_immortal, std::string name, enums::ActorID id, char symbol)
-      : Actor(position, is_immortal, std::move(name), id, symbol) {};
+  PassiveActor(Point position, bool is_immortal,
+               const std::string& name, enums::ActorID id, char live_symbol, char dead_symbol)
+      : Actor(position, is_immortal, name, id, live_symbol, dead_symbol) {};
   ~PassiveActor() override = default;
 
   enums::CollideResult collide(Actor&) override;
@@ -152,10 +152,20 @@ class PassiveActor : public Actor {
 
 class CollectableActor : public PassiveActor {
  public:
-  CollectableActor(Point position, bool is_immortal, std::string name, enums::ActorID id, char symbol, int hp, int mp)
-      : PassiveActor(position, is_immortal, std::move(name), id, symbol) {};
+  CollectableActor(Point position, bool is_immortal, const std::string& name, enums::ActorID id,
+                   char live_symbol, char dead_symbol, int hp, int mp)
+      : PassiveActor(position, is_immortal, name, id, live_symbol, dead_symbol),
+        health_points_{hp}, mana_points_{mp} {};
 
   enums::CollideResult collide(ActiveActor&) override;
+
+  void setHealthPoints(int);
+  int getHealthPoints() const;
+  void setManaPoints(int);
+  int getManaPoints() const;
+ private:
+  int health_points_;
+  int mana_points_;
 };
 
 } // namespace actor

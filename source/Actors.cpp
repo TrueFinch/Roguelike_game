@@ -19,11 +19,11 @@ Point actor::Actor::getPosition() const {
 }
 
 void actor::Actor::setSymbol(char symbol) {
-  symbol_ = symbol;
+  live_symbol_ = symbol;
 }
 
 char actor::Actor::getSymbol() const {
-  return symbol_;
+  return live_symbol_;
 }
 
 void actor::Actor::setIsImmortal(bool is_immortal) {
@@ -76,10 +76,13 @@ int actor::ActiveActor::getMaxHealthPoints() const {
 
 void actor::ActiveActor::setCurHealthPoints(int hp) {
   if (!this->is_dead_) {
-    cur_health_points_ = hp % max_health_points_;
+    cur_health_points_ = (hp > max_health_points_) ? (max_health_points_) : (hp);
   }
   if ((cur_health_points_ <= 0) and (!this->is_immortal_)) {
     this->is_dead_ = true;
+  }
+  if (cur_health_points_ > 0) {
+    this->is_dead_ = false;
   }
 }
 
@@ -226,6 +229,22 @@ enums::CollideResult actor::CollectableActor::collide(ActiveActor& other) {
     }
   }
   return result;
+}
+
+void actor::CollectableActor::setHealthPoints(int hp) {
+  health_points_ = hp;
+}
+
+int actor::CollectableActor::getHealthPoints() const {
+  return health_points_;
+}
+
+void actor::CollectableActor::setManaPoints(int mp) {
+  mana_points_ = mp;
+}
+
+int actor::CollectableActor::getManaPoints() const {
+  return mana_points_;
 }
 
 
