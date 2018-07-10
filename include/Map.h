@@ -4,32 +4,42 @@
 
 #pragma once
 
-#include <Actors.h>
 #include <vector>
+#include <stack>
 #include <cstring>
 #include <memory>
 #include <Config.h>
+#include <Actors.h>
+
 
 namespace map {
+
+class Cell;
+
+class Map;
 
 class Cell {
  public:
   Cell() = default;
-  explicit Cell(std::shared_ptr<actor::Actor> ptr);
-  void setPointer(std::shared_ptr<actor::Actor>);
-  std::shared_ptr<actor::Actor> getPointer() const;
+  void push(std::shared_ptr<actor::Actor>);
+  void pop();
+  std::shared_ptr<actor::Actor> top () const;
  private:
-  std::shared_ptr<actor::Actor> ptr_;
+  std::stack<std::shared_ptr<actor::Actor>> actors_;
 };
 
 class Map {
  public:
-  Map() = default;
-//  Map();
-  std::shared_ptr<actor::Hero> loadMap(std::vector<std::shared_ptr<actor::Actor>>& npc, config::Config&);
-//  std::vector<std::string> getArea(const actor::Point& coord, const int radius) const;
+  static Map& Instance();
+//  std::shared_ptr<actor::Hero> loadMap(std::vector<std::shared_ptr<actor::Actor>>& actors, config::Config&);
+  std::vector<std::vector<std::shared_ptr<actor::Actor>>> getArea(const Point& coord, int radius) const;
   std::shared_ptr<std::vector<std::string>> getMapView() const;
  private:
+  Map() = default;
+  ~Map() = default;
+
+  Map(Map const&) = delete;
+  Map& operator= (Map const&) = delete;
   std::vector<std::vector<map::Cell>> board_;
 };
 
