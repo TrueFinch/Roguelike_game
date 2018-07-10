@@ -31,7 +31,7 @@ class GameManager {
 
   enums::GameState game_state_ = enums::LOADING;
   std::vector<std::shared_ptr<actor::Actor>> actors_;
-  ui::UserInterface ui_;
+//  ui::UserInterface ui_;
   config::Config game_config_;
 
 

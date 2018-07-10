@@ -1,0 +1,13 @@
+{
+  "Loading": {
+    "greeting_": "WELCOME TO MY ROGUELIKE GAME",
+    "hint_": "Press ENTER to continue or ESCAPE to exit"
+  },
+  "MainMenu": {
+    "menu_items_": [
+      "NEW GAME",
+      "CONTINUE",
+      "EXIT"
+    ]
+  }
+}
