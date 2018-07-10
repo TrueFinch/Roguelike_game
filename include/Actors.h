@@ -12,7 +12,8 @@
 #include <Point.h>
 #include <Config.h>
 #include <Enums.h>
-#include <GameManager.h>
+
+// TODO: add a separate initialization of field represents hp, mp, sp
 
 namespace actor {
 
@@ -20,29 +21,11 @@ class Actor;
 
 class ActiveActor;
 
-class Hero;
-
-class Zombie;
-
-class Princess;
-
-class Dragon;
-
 class SpellActor;
-
-class Fireball;
 
 class PassiveActor;
 
-class Wall;
-
-class Floor;
-
 class CollectableActor;
-
-class HealthPotion;
-
-class ManaPotion;
 
 class Actor {
  public:
@@ -66,7 +49,6 @@ class Actor {
   enums::ActorID getID() const;
 
  protected:
-  game::GameManager& game_manager_ = game::GameManager::Instance();
   Point pos_;
   bool is_immortal_;
   std::string name_;
@@ -137,47 +119,6 @@ class ActiveActor : public Actor {
   int cur_score_points_;
 };
 
-class Hero : public ActiveActor {
- public:
-  Hero(Point position, bool is_dead, bool is_immortal, char symbol, int hp, int mp, int dp, int vp, int lp, int sp)
-      : ActiveActor(position, is_dead, is_immortal, "Hero", enums::HERO_ID, symbol, hp, mp, dp, vp, lp, sp) {};
-
-  enums::CollideResult collide(ActiveActor&) override;
-
-  Point findTarget() override;
-  enums::CollideResult move() override;
-};
-
-class Zombie : public ActiveActor {
- public:
-  Zombie(Point position, bool is_dead, bool is_immortal, char symbol, int hp, int mp, int dp, int vp, int lp, int sp)
-      : ActiveActor(position, is_dead, is_immortal, "Zombie", enums::ZOMBIE_ID, symbol, hp, mp, dp, vp, lp, sp) {};
-
-  enums::CollideResult collide(ActiveActor&) override;
-  Point findTarget() override;
-  enums::CollideResult move() override;
-};
-
-class Dragon : public ActiveActor {
- public:
-  Dragon(Point position, bool is_dead, bool is_immortal, char symbol, int hp, int mp, int dp, int vp, int lp, int sp)
-      : ActiveActor(position, is_dead, is_immortal, "Dragon", enums::DRAGON_ID, symbol, hp, mp, dp, vp, lp, sp) {};
-
-  enums::CollideResult collide(ActiveActor&) override;
-  Point findTarget() override;
-  enums::CollideResult move() override;
-};
-
-class Princess : public ActiveActor {
- public:
-  Princess(Point position, bool is_dead, bool is_immortal, char symbol, int hp, int mp, int dp, int vp, int lp, int sp)
-      : ActiveActor(position, is_dead, is_immortal, "Princess", enums::PRINCESS_ID, symbol, hp, mp, dp, vp, lp, sp) {};
-
-  enums::CollideResult collide(ActiveActor&) override;
-  Point findTarget() override;
-  enums::CollideResult move() override;
-};
-
 class SpellActor : public ActiveActor {
  public:
   SpellActor(Point position, bool is_dead, bool is_immortal, std::string name, enums::ActorID id, char symbol,
@@ -196,16 +137,6 @@ class SpellActor : public ActiveActor {
   Point direction_;
 };
 
-class Fireball : public SpellActor {
-  Fireball(Point position, bool is_dead, bool is_immortal, char symbol,
-           int hp, int mp, int dp, int vp, int lp, int sp, Point direction)
-      : SpellActor(position, is_dead, is_immortal, "Fireball", enums::FIRE_BALL_ID, symbol,
-                   hp, mp, dp, vp, lp, sp, direction) {};
-
-  enums::CollideResult collide(ActiveActor&) override;
-  enums::CollideResult move() override;
-};
-
 class PassiveActor : public Actor {
  public:
   PassiveActor(Point position, bool is_immortal, std::string name, enums::ActorID id, char symbol)
@@ -219,34 +150,12 @@ class PassiveActor : public Actor {
   enums::CollideResult collide(CollectableActor&) override;
 };
 
-class Floor : public PassiveActor {
- public:
-  Floor(Point position, bool is_immortal, char symbol)
-      : PassiveActor(position, is_immortal, "Floor", enums::FLOOR_ID, symbol) {};
-};
-
-class Wall : public PassiveActor {
- public:
-  Wall(Point position, bool is_immortal, char symbol)
-      : PassiveActor(position, is_immortal, "Wall", enums::WALL_ID, symbol) {};
-};
-
 class CollectableActor : public PassiveActor {
  public:
   CollectableActor(Point position, bool is_immortal, std::string name, enums::ActorID id, char symbol, int hp, int mp)
       : PassiveActor(position, is_immortal, std::move(name), id, symbol) {};
 
   enums::CollideResult collide(ActiveActor&) override;
-};
-
-class HealthPotion : public CollectableActor {
-  HealthPotion(Point position, char symbol, int hp, int mp)
-      : CollectableActor(position, true, "Health potion", enums::HP_POTION_ID, symbol, hp, mp) {}
-};
-
-class ManaPotion : public CollectableActor {
-  ManaPotion(Point position, char symbol, int hp, int mp)
-      : CollectableActor(position, true, "Mana potion", enums::MP_POTION_ID, symbol, hp, mp) {}
 };
 
 } // namespace actor

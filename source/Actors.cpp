@@ -8,6 +8,8 @@
 #include <utility>
 #include <ncurses.h>
 
+
+
 void actor::Actor::setPosition(Point position) {
   this->pos_ = position;
 }
@@ -158,241 +160,6 @@ int actor::ActiveActor::getMaxScorePoints() const {
   return max_score_points_;
 }
 
-enums::CollideResult actor::Hero::collide(ActiveActor& other) {
-  enums::CollideResult result = enums::BARRIER;
-  enums::ActorID other_id = other.getID();
-  if (other.getIsDead()) {
-    result = enums::FREE;
-  } else if (other_id == enums::HERO_ID) {
-    result = enums::BARRIER;
-  } else if ((other_id == enums::ZOMBIE_ID) or (other_id == enums::DRAGON_ID)) {
-    result = enums::FIGHT;
-  } else if (other_id == enums::PRINCESS_ID) {
-    result = enums::WIN;
-  }
-  return result;
-}
-
-enums::CollideResult actor::Hero::move() {
-  Point hero_pos = this->getPosition();
-  auto area = game_manager_.getArea();
-  int key = game_manager_.getLastPressedKey();
-  Point dir = {0, 0};
-
-  if (key == KEY_UP) {
-    dir.x -= 1;
-  } else if (key == KEY_DOWN) {
-    dir.x += 1;
-  } else if (key == KEY_LEFT) {
-    dir.y -= 1;
-  } else if (key == KEY_RIGHT) {
-    dir.y += 1;
-  }
-
-  Point other_pos = {hero_pos.x + dir.x, hero_pos.y + dir.y};
-  std::shared_ptr<Actor> other = area[other_pos.x][other_pos.y];
-  enums::CollideResult collision = this->collide(*this);
-
-  switch (collision) {
-    case enums::BARRIER:
-      break;
-    case enums::FREE:
-      game_manager_.swap(hero_pos, other_pos);
-      break;
-    case enums::FIGHT:
-      std::shared_ptr<actor::ActiveActor> enemy = std::static_pointer_cast<actor::ActiveActor>(other);
-      enemy->setCurHealthPoints(enemy->getCurHealthPoints() - this->getDamagePoints());
-      this->setCurScorePoints(enemy->level_points_ * 10);
-      if (enemy->getIsDead()) {
-        game_manager_.swap(hero_pos, other_pos);
-      } else {
-        this->setCurHealthPoints(this->getCurHealthPoints() - enemy->getDamagePoints());
-        enemy->setCurScorePoints(this->level_points_ * 10);
-      }
-      break;
-    case enums::WIN:
-      //do nothing
-      break;
-    case enums::PICK:
-      if (other->getID() == enums::HP_POTION_ID)
-        this->setCurHealthPoints(this->getCurHealthPoints() + this->getMaxHealthPoints() * this->getLevelPoints() / 10);
-      else {
-        this->setCurManaPoints(this->getCurManaPoints() + this->getMaxManaPoints() * this->getLevelPoints() / 10);
-      }
-  }
-
-  return collision;
-}
-
-Point actor::Hero::findTarget() {
-  return {42, 42};
-}
-
-enums::CollideResult actor::Zombie::collide(ActiveActor& other) {
-  enums::CollideResult result = enums::BARRIER;
-  enums::ActorID other_id = other.getID();
-  if (other.getIsDead()) {
-    result = enums::PICK;
-  } else if ((other_id == enums::HERO_ID)) {
-    result = enums::FIGHT;
-  } else if ((other_id == enums::ZOMBIE_ID) or (other_id == enums::DRAGON_ID) or (other_id == enums::PRINCESS_ID)) {
-    result = enums::BARRIER;
-  }
-  return result;
-}
-
-Point actor::Zombie::findTarget() {
-//  auto area = game_manager_.getArea();
-  return {rand() % 3 - 1, rand() % 3 - 1};
-}
-
-enums::CollideResult actor::Zombie::move() {
-  Point zombie_pos = this->getPosition();
-  auto area = game_manager_.getArea();
-  Point dir = this->findTarget();
-  Point other_pos = {zombie_pos.x + dir.x, zombie_pos.y + dir.y};
-  std::shared_ptr<Actor> other = area[other_pos.x][other_pos.y];
-  enums::CollideResult collision = this->collide(*this);
-
-  switch (collision) {
-    case enums::BARRIER:
-      break;
-    case enums::FREE:
-      game_manager_.swap(zombie_pos, other_pos);
-      break;
-    case enums::FIGHT:
-      std::shared_ptr<actor::ActiveActor> enemy = std::static_pointer_cast<actor::ActiveActor>(other);
-      enemy->setCurHealthPoints(enemy->getCurHealthPoints() - this->getDamagePoints());
-      this->setCurScorePoints(enemy->level_points_ * 10);
-      if (enemy->getIsDead()) {
-        game_manager_.swap(zombie_pos, other_pos);
-      } else {
-        this->setCurHealthPoints(this->getCurHealthPoints() - enemy->getDamagePoints());
-        enemy->setCurScorePoints(this->level_points_ * 10);
-      }
-      break;
-    case enums::WIN:
-      //do nothing
-      //this case is unreachable for zombie
-      break;
-    case enums::PICK:
-      this->setCurHealthPoints(this->getCurHealthPoints() + this->getMaxHealthPoints() / 20);
-      break;
-  }
-}
-
-enums::CollideResult actor::Dragon::collide(ActiveActor& other) {
-  enums::CollideResult result = enums::BARRIER;
-  enums::ActorID other_id = other.getID();
-  if ((other_id == enums::HERO_ID)) {
-    result = enums::FIGHT;
-  } else if ((other_id == enums::ZOMBIE_ID) or (other_id == enums::DRAGON_ID) or (other_id == enums::PRINCESS_ID)) {
-    result = enums::BARRIER;
-  } else if (other.getIsDead()) {
-    result = enums::FREE;
-  }
-  return result;
-}
-
-Point actor::Dragon::findTarget() {
-//  auto area = game_manager_.getArea();
-  return {rand() % 3 - 1, rand() % 3 - 1};
-}
-
-enums::CollideResult actor::Dragon::move() {
-  Point dragon_pos = this->getPosition();
-  auto area = game_manager_.getArea();
-  Point dir = this->findTarget();
-  Point other_pos = {dragon_pos.x + dir.x, dragon_pos.y + dir.y};
-  std::shared_ptr<Actor> other = area[other_pos.x][other_pos.y];
-  enums::CollideResult collision = this->collide(*this);
-
-  switch (collision) {
-    case enums::BARRIER:
-      break;
-    case enums::FREE:
-      game_manager_.swap(dragon_pos, other_pos);
-      break;
-    case enums::FIGHT:
-      std::shared_ptr<actor::ActiveActor> enemy = std::static_pointer_cast<actor::ActiveActor>(other);
-      enemy->setCurHealthPoints(enemy->getCurHealthPoints() - this->getDamagePoints());
-      this->setCurScorePoints(enemy->level_points_ * 10);
-      if (enemy->getIsDead()) {
-        game_manager_.swap(dragon_pos, other_pos);
-      } else {
-        this->setCurHealthPoints(this->getCurHealthPoints() - enemy->getDamagePoints());
-        enemy->setCurScorePoints(this->level_points_ * 10);
-      }
-      break;
-    case enums::WIN:
-      //do nothing
-      //this case is unreachable for Dragon too
-      break;
-    case enums::PICK:
-      //Fireballs heal the Dragon
-      this->setCurHealthPoints(this->getCurHealthPoints() + this->getMaxHealthPoints() / 20);
-      break;
-  }
-}
-
-enums::CollideResult actor::Princess::collide(ActiveActor& other) {
-  enums::CollideResult result = enums::BARRIER;
-  enums::ActorID other_id = other.getID();
-  if ((other_id == enums::FIRE_BALL_ID) or (other_id == enums::ZOMBIE_ID) or (other_id == enums::DRAGON_ID)) {
-    result = enums::FIGHT;
-  } else if ((other.getIsDead()) or (other_id == enums::PRINCESS_ID)) {
-    result = enums::BARRIER;
-  } else if (other_id == enums::HERO_ID) {
-    result = enums::WIN;
-  }
-  return result;
-}
-
-Point actor::Princess::findTarget() {
-//  auto area = game_manager_.getArea();
-  return {rand() % 3 - 1, rand() % 3 - 1};
-}
-
-enums::CollideResult actor::Princess::move() {
-  Point princess_pos = this->getPosition();
-  auto area = game_manager_.getArea();
-  Point dir = this->findTarget();
-  Point other_pos = {princess_pos.x + dir.x, princess_pos.y + dir.y};
-  std::shared_ptr<Actor> other = area[other_pos.x][other_pos.y];
-  enums::CollideResult collision = this->collide(*this);
-
-  switch (collision) {
-    case enums::BARRIER:
-      break;
-    case enums::FREE:
-      game_manager_.swap(princess_pos, other_pos);
-      break;
-    case enums::FIGHT:
-      std::shared_ptr<actor::ActiveActor> enemy = std::static_pointer_cast<actor::ActiveActor>(other);
-      enemy->setCurHealthPoints(enemy->getCurHealthPoints() - this->getDamagePoints());
-      this->setCurScorePoints(enemy->level_points_ * 10);
-      if (enemy->getIsDead()) {
-        game_manager_.swap(princess_pos, other_pos);
-      } else {
-        this->setCurHealthPoints(this->getCurHealthPoints() - enemy->getDamagePoints());
-        enemy->setCurScorePoints(this->level_points_ * 10);
-      }
-      break;
-    case enums::WIN:
-      //do nothing
-      //this case is unreachable for Princess too
-      break;
-    case enums::PICK:
-      if (other->getID() == enums::HP_POTION_ID)
-        this->setCurHealthPoints(this->getCurHealthPoints() + this->getMaxHealthPoints() * this->getLevelPoints() / 10);
-      else {
-        this->setCurManaPoints(this->getCurManaPoints() + this->getMaxManaPoints() * this->getLevelPoints() / 10);
-      }
-  }
-
-  return collision;
-}
-
 void actor::SpellActor::setDirection(Point dir) {
   direction_ = dir;
 }
@@ -401,57 +168,8 @@ Point actor::SpellActor::getDirection() const {
   return direction_;
 }
 
-enums::CollideResult actor::Fireball::collide(actor::ActiveActor& other) {
-  enums::CollideResult result = enums::BARRIER;
-  enums::ActorID other_id = other.getID();
-  if (other.getIsDead()) {
-    result = enums::FREE;
-  } else if ((other_id == enums::ZOMBIE_ID) or (other_id == enums::PRINCESS_ID) or (other_id == enums::HERO_ID)) {
-    result = enums::FIGHT;
-  } else if (other_id == enums::DRAGON_ID) {
-    result = enums::PICK;
-  }
-  return result;
-}
-
 Point actor::SpellActor::findTarget() {
   return {42, 42};
-}
-
-enums::CollideResult actor::Fireball::move() {
-  Point dragon_pos = this->getPosition();
-  auto area = game_manager_.getArea();
-  Point dir = this->findTarget();
-  Point other_pos = {dragon_pos.x + dir.x, dragon_pos.y + dir.y};
-  std::shared_ptr<Actor> other = area[other_pos.x][other_pos.y];
-  enums::CollideResult collision = this->collide(*this);
-
-  switch (collision) {
-    case enums::BARRIER:
-      break;
-    case enums::FREE:
-      game_manager_.swap(dragon_pos, other_pos);
-      break;
-    case enums::FIGHT:
-      std::shared_ptr<actor::ActiveActor> enemy = std::static_pointer_cast<actor::ActiveActor>(other);
-      enemy->setCurHealthPoints(enemy->getCurHealthPoints() - this->getDamagePoints());
-      this->setCurScorePoints(enemy->level_points_ * 10);
-      if (!this->getIsDead()) {
-        if (enemy->getIsDead()) {
-          game_manager_.swap(dragon_pos, other_pos);
-        }
-      }
-      break;
-    case enums::WIN:
-      //do nothing
-      //this case is unreachable for Fireball too
-      break;
-    case enums::PICK:
-      //Fireballs heal the Dragon
-      std::shared_ptr<actor::ActiveActor> dragon = std::static_pointer_cast<actor::ActiveActor>(other);
-      this->setCurHealthPoints(this->getCurHealthPoints() + this->getMaxHealthPoints() / 20);
-      break;
-  }
 }
 
 enums::CollideResult actor::PassiveActor::collide(Actor& other) {
@@ -461,7 +179,7 @@ enums::CollideResult actor::PassiveActor::collide(Actor& other) {
 enums::CollideResult actor::PassiveActor::collide(ActiveActor& other) {
   enums::CollideResult result = enums::FREE;
   enums::ActorID this_id = this->getID();
-  enums::ActorID other_id = other.getID();
+//  enums::ActorID other_id = other.getID();
   if (this_id == enums::WALL_ID) {
     result = enums::BARRIER;
   } else if (this_id == enums::FLOOR_ID) {
