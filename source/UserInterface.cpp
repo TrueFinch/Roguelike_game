@@ -5,13 +5,9 @@
 #include "UserInterface.h"
 #include <utility>
 
-ui::UserInterface::UserInterface(stats::UIStat stat) {
-  loading_.setGreeting(stat.getGreeting());
-  loading_.setHint(stat.getHint());
-  main_menu_.setMenuItems(stat.getMenuItems());
-//  loading_ = game_screen::Loading();
-//  main_menu_ = game_screen::MainMenu();
-//  game_field_ = game_screen::GameField();
+ui::UserInterface& ui::UserInterface::Instance() {
+  static UserInterface self;
+  return self;
 }
 
 enums::GameState ui::UserInterface::update(enums::GameState game_state, int key) {
@@ -32,6 +28,8 @@ enums::GameState ui::UserInterface::update(enums::GameState game_state, int key)
     case enums::GAME_FIELD:
       game_state = game_field_.update(key);
       break;
+    case enums::PAUSE:
+      break;
   }
   return game_state;
 }
@@ -39,3 +37,5 @@ enums::GameState ui::UserInterface::update(enums::GameState game_state, int key)
 void ui::UserInterface::updateMap(std::shared_ptr<std::vector<std::string>> map, Point hero_pos) {
   game_field_.updateMap(std::move(map), hero_pos);
 }
+
+
