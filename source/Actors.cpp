@@ -26,14 +26,6 @@ char actor::Actor::getSymbol() const {
   return live_symbol_;
 }
 
-void actor::Actor::setIsImmortal(bool is_immortal) {
-  is_immortal_ = is_immortal;
-}
-
-bool actor::Actor::getIsImmortal() const {
-  return is_immortal_;
-}
-
 std::string actor::Actor::getName() const {
   return name_;
 }
@@ -64,6 +56,14 @@ void actor::ActiveActor::setIsDead(bool is_dead) {
 
 bool actor::ActiveActor::getIsDead() const {
   return is_dead_;
+}
+
+void actor::ActiveActor::setIsImmortal(bool is_immortal) {
+  is_immortal_ = is_immortal;
+}
+
+bool actor::ActiveActor::getIsImmortal() const {
+  return is_immortal_;
 }
 
 void actor::ActiveActor::setMaxHealthPoints(int hp) {
@@ -144,7 +144,7 @@ int actor::ActiveActor::getLevelPoints() const {
 }
 
 void actor::ActiveActor::setLevelPoints(int lp) {
-  for(int i = 1; i <= lp; ++i) {
+  for(int i = level_points_; i < lp; ++i) {
     this->upLevelPoints();
   }
 }

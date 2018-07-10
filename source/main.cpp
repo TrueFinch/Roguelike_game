@@ -1,11 +1,12 @@
 #include <iostream>
 #include <ncurses.h>
-#include "Game_manager.h"
+#include "GameManager.h"
 
 int main() {
   int max_rows, max_cols;
   getmaxyx(stdscr, max_rows, max_cols);
-  game::Game_manager game(max_rows, max_cols);
-  game.start();
+  game::GameManager& game = game::GameManager::Instance();
+  game.Init(max_rows, max_cols);
+  game.Start();
   return 0;
 }

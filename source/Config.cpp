@@ -10,7 +10,7 @@
 using json = nlohmann::json;
 
 void config::Config::loadConfig() {
-  std::ifstream fin("/home/truefinch/CLionProjects/Roguelike_game/configuration/config.json");
+  std::ifstream fin("/home/truefinch/CLionProjects/Roguelike_game/configuration/config_level1.json");
   json json_config;
   fin >> json_config;
 

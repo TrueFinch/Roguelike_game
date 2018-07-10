@@ -7,7 +7,7 @@
 
  class Wall : public actor::PassiveActor {
  public:
-  Wall(Point position, bool is_immortal, char live_symbol, char dead_symbol)
-      : PassiveActor(position, is_immortal, "Wall", enums::WALL_ID, live_symbol, dead_symbol) {};
+  Wall(Point position, char live_symbol, char dead_symbol)
+      : PassiveActor(position, "Wall", enums::WALL_ID, live_symbol, dead_symbol) {};
 };
 

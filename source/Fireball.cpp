@@ -27,6 +27,7 @@ enums::CollideResult Fireball::move() {
 
   switch (collision) {
     case enums::BARRIER: {
+      this->setIsDead(true);
       break;
     }
     case enums::FREE: {

@@ -14,7 +14,9 @@ game::GameManager& game::GameManager::Instance() {
 void game::GameManager::Init(int rows, int cols) {
   rows_ = rows;
   cols_ = cols;
-  game_config_.loadConfig();
+//  game_config_.loadConfig();
+  //TODO: Add initialization of UI
+  //TODO: Add loading of map and configuration
 //  ui_ = ui::UserInterface(*game_config_.getUIStat());
 //  hero_ptr_ = map::Map::Instance().loadMap(actors_, game_config_);
   game_state_ = enums::LOADING;
@@ -47,7 +49,7 @@ void game::GameManager::Start() {
 //        ui_.updateMap(map_.getMapView(), hero_ptr_->getCoord());
       }
     }
-    game_state_ = ui_.update(game_state_, key);
+//    game_state_ = ui_.update(game_state_, key);
   }
   Finish();
 }
