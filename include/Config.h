@@ -13,22 +13,25 @@ namespace config {
 class Config {
  public:
   static Config& Instance();
-  void init(const std::string& path);
-  json getHero();
-  json getZombie();
-  json getDragon();
-  json getPrincess();
-  json getFireball();
-  json getWall();
-  json getFloor();
-  json getHealthPotion();
-  json getManaPotion();
+  void init_actors(const std::string& path);
+  json getHero() const;
+  json getZombie() const;
+  json getDragon() const;
+  json getPrincess() const;
+  json getFireball() const;
+  json getWall() const;
+  json getFloor() const;
+  json getHealthPotion() const;
+  json getManaPotion() const;
 
+  void init_ui(const std::string& path);
+  json getLoading() const;
+  json getMainMenu() const;
  private:
   Config() = default;
   ~Config() = default;
   Config(Config const&) = delete;
-  Config& operator= (Config const&) = delete;
+  Config& operator=(Config const&) = delete;
 
   json hero_;
   json zombie_;
@@ -39,6 +42,9 @@ class Config {
   json floor_;
   json health_potion_;
   json mana_potion_;
+
+  json loading_;
+  json main_menu_;
 };
 
 } // namespace config

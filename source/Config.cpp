@@ -11,8 +11,8 @@ config::Config& config::Config::Instance() {
   return self;
 }
 
-void config::Config::init(const std::string& path) {
-  std::ifstream fin("/home/truefinch/CLionProjects/Roguelike_game/configuration/config_level1.json");
+void config::Config::init_actors(const std::string& path) {
+  std::ifstream fin("/home/truefinch/CLionProjects/Roguelike_game/configuration/config_level_1.json");
   json json_config;
   fin >> json_config;
   for (json::iterator i = json_config.begin(); i != json_config.end(); ++i) {
@@ -45,39 +45,62 @@ void config::Config::init(const std::string& path) {
   fin.close();
 }
 
-json config::Config::getHero()  {
+json config::Config::getHero() const {
   return hero_;
 }
 
-json config::Config::getZombie() {
+json config::Config::getZombie() const {
   return zombie_;
 }
 
-json config::Config::getDragon() {
+json config::Config::getDragon() const {
   return dragon_;
 }
 
-json config::Config::getPrincess() {
+json config::Config::getPrincess() const {
   return princess_;
 }
 
-json config::Config::getFireball() {
+json config::Config::getFireball() const {
   return fireball_;
 }
 
-json config::Config::getWall() {
+json config::Config::getWall() const {
   return wall_;
 }
 
-json config::Config::getFloor() {
+json config::Config::getFloor() const {
   return floor_;
 }
 
-json config::Config::getHealthPotion() {
+json config::Config::getHealthPotion() const {
   return health_potion_;
 }
 
-json config::Config::getManaPotion() {
+json config::Config::getManaPotion() const {
   return mana_potion_;
+}
+
+void config::Config::init_ui(const std::string& path) {
+  std::ifstream fin(path);
+  json json_config;
+  fin >> json_config;
+
+  for (json::iterator i = json_config.begin(); i != json_config.end(); ++i) {
+    json ui_config = *i;
+    if (i.key() == "Loading") {
+      loading_ = ui_config;
+    } else if (i.key() == "MainMenu") {
+      main_menu_ = ui_config;
+    }
+  }
+}
+
+json config::Config::getLoading() const {
+  return loading_;
+}
+
+json config::Config::getMainMenu() const {
+  return main_menu_;
 }
 
