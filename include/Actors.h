@@ -8,9 +8,7 @@
 #include <memory>
 #include <string>
 #include <utility>
-#include <Statistics.h>
 #include <Point.h>
-#include <Config.h>
 #include <Enums.h>
 
 namespace actor {
@@ -56,8 +54,8 @@ class Actor {
 class ActiveActor : public Actor {
  public:
   ActiveActor(Point position, bool is_dead, bool is_immortal, const std::string& name, enums::ActorID id,
-              char live_symbol, char dead_symbol,
-              int max_hp, int cur_hp, int max_mp, int cur_mp, int dp, int vp, int lp, int max_sp, int cur_sp)
+              char live_symbol, char dead_symbol, int max_hp, int cur_hp, int max_mp, int cur_mp,
+              int dp, int vp, int lp, int max_sp, int cur_sp, int sp_multiplier)
       : Actor(position, name, id, live_symbol, dead_symbol),
         is_dead_{is_dead},
         is_immortal_{is_immortal},
@@ -69,7 +67,8 @@ class ActiveActor : public Actor {
         visibility_points_{vp},
         level_points_{lp},
         max_score_points_{max_sp},
-        cur_score_points_{cur_sp} {};
+        cur_score_points_{cur_sp},
+        score_points_multiplier{sp_multiplier} {};
   ~ActiveActor() override = default;
 
   enums::CollideResult collide(Actor&) override;
@@ -105,10 +104,12 @@ class ActiveActor : public Actor {
   int getMaxScorePoints() const;
   void setCurScorePoints(int);
   int getCurScorePoints() const;
+  void setScorePointsMultiplier(int);
+  int getScorePointsMultiplier() const;
 
  protected:
-  bool is_immortal_;
   bool is_dead_;
+  bool is_immortal_;
   int max_health_points_;
   int cur_health_points_;
   int max_mana_points_;
@@ -118,14 +119,16 @@ class ActiveActor : public Actor {
   int level_points_ = 1;
   int max_score_points_;
   int cur_score_points_;
+  int score_points_multiplier;
 };
 
 class SpellActor : public ActiveActor {
  public:
   SpellActor(Point position, bool is_dead, bool is_immortal, const std::string& name, enums::ActorID id,
-             char live_symbol, char dead_symbol, int hp, int mp, int dp, int vp, int lp, int sp, Point direction)
+             char live_symbol, char dead_symbol, int max_hp, int cur_hp, int max_mp, int cur_mp, int dp, int vp, int lp, int max_sp, int cur_sp, int sp_multiplier,
+             Point direction)
       : ActiveActor(position, is_dead, is_immortal, name, id, live_symbol, dead_symbol,
-                    hp, hp, mp, mp, dp, vp, lp, sp, 0), direction_{direction} {};
+                    max_hp, cur_hp, max_mp, cur_mp, dp, vp, lp, max_sp, cur_sp, sp_multiplier), direction_{direction} {};
 
   virtual enums::CollideResult collide(ActiveActor&) = 0;
   Point findTarget() override;

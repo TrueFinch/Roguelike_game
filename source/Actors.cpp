@@ -169,6 +169,14 @@ int actor::ActiveActor::getMaxScorePoints() const {
   return max_score_points_;
 }
 
+void actor::ActiveActor::setScorePointsMultiplier(int sp_multiplier) {
+  score_points_multiplier = sp_multiplier;
+}
+
+int actor::ActiveActor::getScorePointsMultiplier() const {
+  return score_points_multiplier;
+}
+
 void actor::SpellActor::setDirection(Point dir) {
   direction_ = dir;
 }
