@@ -18,25 +18,12 @@ class Screen {
   ~Screen() = default;
 };
 
-class Loading : public Screen, public stats::LoadingStat {
- public:
-  Loading() = default;
-  enums::GameState update(int key) override;
-};
-
-class MainMenu : public Screen, public stats::MainMenuStat {
- public:
-  MainMenu() = default;
-  enums::GameState update(int key) override;
- private:
-  int chosen_ = 0;
-};
-
 class GameField : public Screen {
  public:
   GameField() = default;
   enums::GameState update(int key) override;
   enums::GameState updateMap(std::shared_ptr<std::vector<std::string>>, Point hero_pos);
+  std::vector<std::string> getMenuItems();
  private:
   Point hero_pos_ = {0, 0};
   std::vector<std::string> map_;

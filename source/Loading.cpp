@@ -22,6 +22,7 @@ enums::GameState Loading::update(const int key) {
       new_state = enums::EXIT;
       break;
     default:
+      new_state = enums::LOADING;
       break;
   }
   mvwprintw(stdscr, max_rows / 2, (max_cols - (int) getGreeting().length()) / 2, "%s", getGreeting().c_str());

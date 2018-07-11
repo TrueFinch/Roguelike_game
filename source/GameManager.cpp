@@ -11,16 +11,14 @@ game::GameManager& game::GameManager::Instance() {
   return self;
 }
 
-void game::GameManager::Init(int rows, int cols) {
+void game::GameManager::init(int rows, int cols) {
   rows_ = rows;
   cols_ = cols;
-//  game_config_.loadConfig();
   //TODO: Add initialization of UI
   //TODO: Add loading of map and configuration
-//  ui_ = ui::UserInterface(*game_config_.getUIStat());
+//  ui::UserInterface::Instance().init();
 //  hero_ptr_ = map::Map::Instance().loadMap(actors_, game_config_);
   game_state_ = enums::LOADING;
-  std::shared_ptr<std::vector<std::string>> a = map::Map::Instance().getMapView();
 
   initscr();
   clear();
@@ -32,24 +30,41 @@ void game::GameManager::Init(int rows, int cols) {
   resize_term(rows, cols);
 }
 
-
-
 void game::GameManager::Start() {
   int key = ERR;
-//  game_state_ = loading_.update(key);
 
   while (game_state_ != enums::EXIT) {
+    this->game_state_ = ui::UserInterface::Instance().update(this->game_state_, key);
     key = getch();
-    if (key != ERR) {
-      if (game_state_ == enums::GAME_FIELD) {
-        Point direction;
-        for (const auto& actor : actors_) {
-
+    if (game_state_ == enums::GAME_FIELD) {
+      this->setLastPressedKey(key);
+      if (key != ERR) {
+        if (!map::Map::Instance().loaded) {
+          std::vector<enums::ActorID> actorsID;
+          std::vector<Point> actors_pos;
+          map::Map::Instance().loadMap(actorsID,
+                                       actors_pos,
+                                       "/home/truefinch/CLionProjects/Roguelike_game/map/level_1.txt");
+          for (int i = 0; i < (int) actorsID.size(); ++i) {
+            std::shared_ptr<actor::Actor> actor_ptr;
+            actor_ptr = factory::ActorFactory::Instance().CreateActor(actorsID[i], actors_pos[i]);
+            enums::ActorID id = actor_ptr->getID();
+            map::Map::Instance().addActorToCell(actor_ptr, actors_pos[i]);
+            if ((id == enums::ZOMBIE_ID) or (id == enums::DRAGON_ID) or (id == enums::PRINCESS_ID)) {
+              this->actors_.push_back(std::static_pointer_cast<actor::ActiveActor>(actor_ptr));
+            } else if (id == enums::HERO_ID) {
+              this->hero_ = std::static_pointer_cast<actor::ActiveActor>(actor_ptr);
+            }
+          }
         }
-//        ui_.updateMap(map_.getMapView(), hero_ptr_->getCoord());
+        hero_->move();
+        for (int i = 0; i < (int) this->actors_.size(); ++i) {
+          actors_[i]->move();
+        }
       }
+      ui::UserInterface::Instance().updateMap(map::Map::Instance().getMapView(), this->hero_);
+//      ui::UserInterface::Instance().update(this->game_state_, key);
     }
-//    game_state_ = ui_.update(game_state_, key);
   }
   Finish();
 }
@@ -63,18 +78,14 @@ std::vector<std::vector<std::shared_ptr<map::Cell>>> game::GameManager::getArea(
   return std::vector<std::vector<std::shared_ptr<map::Cell>>>();
 }
 
-void game::GameManager::setLastPressedKey(int) {
-
+void game::GameManager::setLastPressedKey(int key) {
+  this->last_pressed_key_ = key;
 }
 
 int game::GameManager::getLastPressedKey() const {
-  return 0;
+  return this->last_pressed_key_;
 }
 
 void game::GameManager::swap(Point a, Point b) const {
-
+  map::Map::Instance().swap(a, b);
 }
-//std::shared_ptr<config::Config> game::GameManager::getConfiguration() const {
-//  return std::make_shared<config::Config>(game_config_);
-//}
-
