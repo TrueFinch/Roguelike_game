@@ -51,12 +51,12 @@ enums::CollideResult Hero::move() {
     case enums::FIGHT: {
       std::shared_ptr<actor::ActiveActor> enemy = std::static_pointer_cast<actor::ActiveActor>(other);
       enemy->setCurHealthPoints(enemy->getCurHealthPoints() - this->getDamagePoints());
-      this->setCurScorePoints(this->cur_score_points_ + enemy->getLevelPoints() * 10);
+      this->setCurScorePoints(this->cur_score_points_ + enemy->getLevelPoints() * enemy->getScorePointsMultiplier());
       if (enemy->getIsDead()) {
         game::GameManager::Instance().swap(hero_pos, other_pos);
       } else {
         this->setCurHealthPoints(this->getCurHealthPoints() - enemy->getDamagePoints());
-        enemy->setCurScorePoints(enemy->getCurScorePoints() + this->level_points_ * 10);
+        enemy->setCurScorePoints(enemy->getCurScorePoints() + this->level_points_ * this->getScorePointsMultiplier());
       }
       break;
     }
@@ -65,10 +65,12 @@ enums::CollideResult Hero::move() {
       break;
     }
     case enums::PICK: {
-      if (other->getID() == enums::HP_POTION_ID)
-        this->setCurHealthPoints(this->getCurHealthPoints() + this->getMaxHealthPoints() * this->getLevelPoints() / 10);
-      else {
-        this->setCurManaPoints(this->getCurManaPoints() + this->getMaxManaPoints() * this->getLevelPoints() / 10);
+      if (other->getID() == enums::HP_POTION_ID) {
+        std::shared_ptr<actor::CollectableActor> potion = std::static_pointer_cast<actor::CollectableActor>(other);
+        this->setCurHealthPoints(this->getCurHealthPoints() + potion->getHealthPoints());
+      } else if (other->getID() == enums::MP_POTION_ID) {
+        std::shared_ptr<actor::CollectableActor> potion = std::static_pointer_cast<actor::CollectableActor>(other);
+        this->setCurManaPoints(this->getCurManaPoints() +  + potion->getManaPoints());
       }
       break;
     }

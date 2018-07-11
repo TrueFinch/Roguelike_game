@@ -18,12 +18,20 @@ Point actor::Actor::getPosition() const {
   return this->pos_;
 }
 
-void actor::Actor::setSymbol(char symbol) {
+void actor::Actor::setLiveSymbol(char symbol) {
   live_symbol_ = symbol;
 }
 
-char actor::Actor::getSymbol() const {
+char actor::Actor::getLiveSymbol() const {
   return live_symbol_;
+}
+
+void actor::Actor::setDeadSymbol(char symbol) {
+  dead_symbol_ = symbol;
+}
+
+char actor::Actor::getDeadSymbol() const {
+  return dead_symbol_;
 }
 
 std::string actor::Actor::getName() const {
@@ -80,9 +88,6 @@ void actor::ActiveActor::setCurHealthPoints(int hp) {
   }
   if ((cur_health_points_ <= 0) and (!this->is_immortal_)) {
     this->is_dead_ = true;
-  }
-  if (cur_health_points_ > 0) {
-    this->is_dead_ = false;
   }
 }
 
@@ -186,7 +191,7 @@ Point actor::SpellActor::getDirection() const {
 }
 
 Point actor::SpellActor::findTarget() {
-  return {42, 42};
+  return this->getDirection();
 }
 
 enums::CollideResult actor::PassiveActor::collide(Actor& other) {

@@ -41,12 +41,12 @@ enums::CollideResult Dragon::move() {
     case enums::FIGHT: {
       std::shared_ptr<actor::ActiveActor> enemy = std::static_pointer_cast<actor::ActiveActor>(other);
       enemy->setCurHealthPoints(enemy->getCurHealthPoints() - this->getDamagePoints());
-      this->setCurScorePoints(enemy->getLevelPoints() * 10);
+      this->setCurScorePoints(enemy->getLevelPoints() * enemy->getScorePointsMultiplier());
       if (enemy->getIsDead()) {
         game::GameManager::Instance().swap(dragon_pos, other_pos);
       } else {
         this->setCurHealthPoints(this->getCurHealthPoints() - enemy->getDamagePoints());
-        enemy->setCurScorePoints(this->level_points_ * 10);
+        enemy->setCurScorePoints(this->level_points_ * this->getScorePointsMultiplier());
       }
       break;
     }
@@ -57,7 +57,9 @@ enums::CollideResult Dragon::move() {
     }
     case enums::PICK: {
       //Fireballs heal the Dragon
-      this->setCurHealthPoints(this->getCurHealthPoints() + this->getMaxHealthPoints() / 20);
+      std::shared_ptr<actor::SpellActor> fireball = std::static_pointer_cast<actor::SpellActor>(other);
+      this->setCurHealthPoints(this->getCurHealthPoints() + fireball->getCurHealthPoints());
+      fireball->setCurHealthPoints(0);
       break;
     }
   }

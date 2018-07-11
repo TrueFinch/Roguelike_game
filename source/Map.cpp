@@ -23,40 +23,13 @@ map::Map& map::Map::Instance() {
   return self;
 }
 
-//std::shared_ptr<actor::Hero> map::Map::loadMap(std::vector<std::shared_ptr<actor::ActiveActor>>& actors,
-//                       config::Config& config) {
-//  std::shared_ptr<actor::Hero> hero_ptr;
-//  std::ifstream fin("/home/truefinch/CLionProjects/Roguelike_game/map/level1.txt");
-//  int rows = 0, cols = 0;
-//  std::shared_ptr<actor::ActiveActor> actor_ptr;
-//
-//  fin >> rows >> cols;
-//  std::string str;
-//  for (int i = 0; i < rows; ++i) {
-//    fin >> str;
-//    board_.emplace_back(std::vector<map::Cell>());
-//    for (int j = 0; j < cols; ++j) {
-//      auto actor_id = (enums::ActorID) str[j];
-////      actor_ptr = actor::ActiveActor::createActor(actor_id, config, {(double) i, (double) j});
-//      if ((actor_id == enums::ZOMBIE_ID) or (actor_id == enums::DRAGON_ID) or (actor_id == enums::FIRE_BALL_ID) or (actor_id == enums::PRINCESS_ID)) {
-//        actors.push_back(actor_ptr);
-//      } else if (actor_id == enums::HERO_ID) {
-//        hero_ptr = std::static_pointer_cast<actor::Hero>(actor_ptr);
-//      }
-////      board_[board_.size() - 1].emplace_back(map::Cell(actor_ptr));
-//    }
-//  }
-//
-//  fin.close();
-//  return hero_ptr;
-//}
-
 std::shared_ptr<std::vector<std::string>> map::Map::getMapView() const {
   std::vector<std::string> map_view;
   for (const auto& row : this->board_) {
     map_view.emplace_back(std::string());
     for (const auto& cell : row) {
       char c;
+     map_view[map_view.size() - 1].push_back(cell.top()->getLiveSymbol());
 //      switch ((cell.getPointer() == nullptr) ? (enums::NOTHING_ID) : (cell.getPointer()->sayID())) {
 //        case enums::ActorID::HERO_ID:
 //          c = std::dynamic_pointer_cast<actor::Hero>(cell.getPointer())->getUndeadSymbol();
@@ -90,10 +63,41 @@ std::vector<std::vector<std::shared_ptr<actor::Actor>>> map::Map::getArea(const 
   for (int i = 0; i < (2 * radius); ++i) {
     area.emplace_back(std::vector<std::shared_ptr<actor::Actor>>());
     for (int j = 0; j < (2 * radius); ++j) {
-//      area[area.size() - 1].push_back(board_[coord.x - radius + i][coord.y - radius + j].getPointer());
-//      area[area.size() - 1].push_back(board_[coord.x - radius + i][coord.y - radius + j].getPointer());
+      area[area.size() - 1].push_back(board_[coord.x - radius + i][coord.y - radius + j].top());
+      area[area.size() - 1].push_back(board_[coord.x - radius + i][coord.y - radius + j].top());
     }
   }
   return area;
 }
+
+void map::Map::loadMap(std::vector<enums::ActorID>& actors, std::vector<Point>& positions, const std::string& path) {
+  std::ifstream fin(path);
+  int rows, cols;
+  fin >> rows >> cols;
+  std::string str;
+  for (int i = 0; i < rows; ++i) {
+    fin >> str;
+    board_.emplace_back(std::vector<map::Cell>(static_cast<unsigned long>(cols)));
+    for (int j = 0; j < cols; ++j) {
+      auto actor_id = (enums::ActorID) str[j];
+      actors.push_back(actor_id);
+      positions.emplace_back(i, j);
+    }
+  }
+  loaded = true;
+  fin.close();
+}
+
+void map::Map::addActorToCell(std::shared_ptr<actor::Actor> actor_ptr, const Point& position) {
+  board_[position.x][position.y].push(std::move(actor_ptr));
+}
+
+void map::Map::swap(Point a, Point b) {
+  std::shared_ptr<actor::Actor> tmp = this->board_[a.x][a.y].top();
+  this->board_[a.x][a.y].pop();
+  this->board_[a.x][a.y].push(this->board_[b.x][b.y].top());
+  this->board_[b.x][b.y].pop();
+  this->board_[b.x][b.y].push(tmp);
+}
+
 

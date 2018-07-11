@@ -7,6 +7,6 @@
 
  class Floor : public actor::PassiveActor {
  public:
-  Floor(Point position, bool is_immortal, char live_symbol, char dead_symbol)
-      : PassiveActor(position, is_immortal, "Floor", enums::FLOOR_ID, live_symbol, dead_symbol) {};
+  Floor(Point position, char live_symbol, char dead_symbol, bool is_dead, bool is_immortal)
+      : PassiveActor(position, "Floor", enums::FLOOR_ID, live_symbol, dead_symbol,  is_dead,  is_immortal) {};
 };
