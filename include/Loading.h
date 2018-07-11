@@ -7,7 +7,7 @@
 #include <ncurses.h>
 #include <vector>
 #include <string>
-//Took away Loading class from screens to it's own file and make it singleton
+
 class Loading {
  public:
   static Loading& Instance();

@@ -8,7 +8,6 @@
 #include <stack>
 #include <cstring>
 #include <memory>
-#include <Config.h>
 #include <Actors.h>
 
 
@@ -31,9 +30,12 @@ class Cell {
 class Map {
  public:
   static Map& Instance();
-//  std::shared_ptr<actor::Hero> loadMap(std::vector<std::shared_ptr<actor::Actor>>& actors, config::Config&);
+  void loadMap(std::vector<enums::ActorID>&, std::vector<Point>&, const std::string&);
   std::vector<std::vector<std::shared_ptr<actor::Actor>>> getArea(const Point& coord, int radius) const;
   std::shared_ptr<std::vector<std::string>> getMapView() const;
+  void addActorToCell(std::shared_ptr<actor::Actor>, const Point&);
+  void swap(Point a, Point b);
+  bool loaded = false;
  private:
   Map() = default;
   ~Map() = default;
