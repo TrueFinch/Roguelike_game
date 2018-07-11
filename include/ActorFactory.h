@@ -20,7 +20,7 @@ namespace factory {
 class ActorFactory {
  public:
   static ActorFactory& Instance();
-  std::shared_ptr<actor::Actor> CreateActor(Point position, enums::ActorID);
+  std::shared_ptr<actor::Actor> CreateActor(enums::ActorID, Point position = {-1, -1}, Point direction = {42, 42});
  private:
   ActorFactory() = default;
   ~ActorFactory() = default;
