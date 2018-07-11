@@ -3,30 +3,42 @@
 //
 #pragma once
 
-#include <Statistics.h>
 #include <memory>
+#include <nlohmann/json.hpp>
+
+using json = nlohmann::json;
 
 namespace config {
 
 class Config {
  public:
-  Config() = default;
-  void loadConfig();
-  std::shared_ptr<stats::HeroStat> getHeroStat() const;
-  std::shared_ptr<stats::ZombieStat> getZombieStat() const;
-  std::shared_ptr<stats::WallStat> getWallStat() const;
-  std::shared_ptr<stats::PrincessStat> getPrincessStat() const;
-  std::shared_ptr<stats::DragonStat> getDragonStat() const;
-  std::shared_ptr<stats::UIStat> getUIStat() const;
+  static Config& Instance();
+  void init(const std::string& path);
+  json getHero();
+  json getZombie();
+  json getDragon();
+  json getPrincess();
+  json getFireball();
+  json getWall();
+  json getFloor();
+  json getHealthPotion();
+  json getManaPotion();
+
  private:
-  stats::HeroStat hero_stat_;
-  stats::PrincessStat princess_stat_;
-  stats::ZombieStat zombie_stat_;
-  stats::DragonStat dragon_stat_;
-  stats::WallStat wall_stat_;
-  stats::LoadingStat loading_stat_;
-  stats::MainMenuStat main_menu_stat_;
-  stats::UIStat ui_stat_;
+  Config() = default;
+  ~Config() = default;
+  Config(Config const&) = delete;
+  Config& operator= (Config const&) = delete;
+
+  json hero_;
+  json zombie_;
+  json dragon_;
+  json princess_;
+  json fireball_;
+  json wall_;
+  json floor_;
+  json health_potion_;
+  json mana_potion_;
 };
 
 } // namespace config
