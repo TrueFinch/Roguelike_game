@@ -3,13 +3,16 @@
 //
 #pragma once
 
+#define KEY_ENT 10
+#define KEY_ESC 27
+
 namespace enums {
 
 enum ActorID {
   HERO_ID = '@',
   ZOMBIE_ID = 'Z',
-  PRINCESS_ID = 'P',
   DRAGON_ID = 'D',
+  PRINCESS_ID = 'P',
   FIRE_BALL_ID = '*',
   FLOOR_ID = '.',
   WALL_ID = '#',
