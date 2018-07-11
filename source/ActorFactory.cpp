@@ -3,3 +3,8 @@
 //
 
 #include "ActorFactory.h"
+
+factory::ActorFactory& factory::ActorFactory::Instance() {
+  static ActorFactory self;
+  return self;
+}

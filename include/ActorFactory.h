@@ -3,6 +3,7 @@
 //
 #pragma once
 
+#include <Config.h>
 #include <Actors.h>
 #include <Hero.h>
 #include <Zombie.h>
@@ -17,7 +18,14 @@
 namespace factory {
 
 class ActorFactory {
-
+ public:
+  static ActorFactory& Instance();
+  std::shared_ptr<actor::Actor> CreateActor(Point position, enums::ActorID);
+ private:
+  ActorFactory() = default;
+  ~ActorFactory() = default;
+  ActorFactory(ActorFactory const&) = delete;
+  ActorFactory& operator= (ActorFactory const&) = delete;
 };
 
 } // namespace factory
