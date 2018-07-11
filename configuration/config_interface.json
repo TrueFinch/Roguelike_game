@@ -6,7 +6,7 @@
   "MainMenu": {
     "menu_items_": [
       "NEW GAME",
-      "CONTINUE",
+      "SETTINGS",
       "EXIT"
     ]
   }
