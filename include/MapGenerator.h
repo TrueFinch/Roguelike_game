@@ -19,6 +19,7 @@ class MapGenerator {
   void fillCanvas();
   void readTiles();
   void addActors();
+  void saveMap();
   bool checkReach(const Point& a, const Point& b);
 
   std::vector<std::vector<int>>& getCanvas() const;

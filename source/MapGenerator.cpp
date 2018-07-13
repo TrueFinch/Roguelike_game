@@ -183,3 +183,16 @@ bool MapGenerator::checkReach(const Point& a, const Point& b) {
   }
   return (visited[a.x][a.y]) and (visited[b.x][b.y]);
 }
+
+void MapGenerator::saveMap() {
+  MapGenerator& mapGenerator = MapGenerator::Instance();
+
+  std::ofstream map_file;
+  map_file.open("/home/truefinch/CLionProjects/Roguelike_game/map/level");
+  map_file << mapGenerator.map_rows_ << std::endl << mapGenerator.map_cols_ << std::endl;
+  for (int i = 0; i < mapGenerator.map_rows_; ++i) {
+    map_file << mapGenerator.map_[i] << std::endl;
+  }
+  map_file.close();
+}
+
