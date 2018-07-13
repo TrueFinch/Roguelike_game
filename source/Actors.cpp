@@ -8,8 +8,6 @@
 #include <utility>
 #include <ncurses.h>
 
-
-
 void actor::Actor::setPosition(Point position) {
   this->pos_ = position;
 }
@@ -42,35 +40,19 @@ enums::ActorID actor::Actor::getID() const {
   return id_;
 }
 
-enums::CollideResult actor::ActiveActor::collide(Actor& other) {
-  return other.collide(*this);
-}
-
-enums::CollideResult actor::ActiveActor::collide(PassiveActor& other) {
-  return other.collide(*this);
-}
-
-enums::CollideResult actor::ActiveActor::collide(SpellActor& other) {
-  return other.collide(*this);
-}
-
-enums::CollideResult actor::ActiveActor::collide(actor::CollectableActor& other) {
-  return other.collide(*this);
-}
-
-void actor::ActiveActor::setIsDead(bool is_dead) {
+void actor::Actor::isDead(bool is_dead) {
   is_dead_ = is_dead;
 }
 
-bool actor::ActiveActor::getIsDead() const {
+bool actor::Actor::isDead() const {
   return is_dead_;
 }
 
-void actor::ActiveActor::setIsImmortal(bool is_immortal) {
+void actor::Actor::isImmortal(bool is_immortal) {
   is_immortal_ = is_immortal;
 }
 
-bool actor::ActiveActor::getIsImmortal() const {
+bool actor::Actor::isImmortal() const {
   return is_immortal_;
 }
 
@@ -104,7 +86,11 @@ int actor::ActiveActor::getMaxManaPoints() const {
 }
 
 void actor::ActiveActor::setCurManaPoints(int mp) {
-  cur_mana_points_ = mp % max_mana_points_;
+  if (mp > max_mana_points_) {
+    cur_mana_points_ = max_mana_points_;
+  } else {
+    cur_mana_points_ = mp;
+  }
 }
 
 int actor::ActiveActor::getCurManaPoints() const {
@@ -190,64 +176,8 @@ Point actor::SpellActor::getDirection() const {
   return direction_;
 }
 
-Point actor::SpellActor::findTarget() {
+Point actor::SpellActor::findTarget(const std::vector<std::vector<std::shared_ptr<actor::Actor>>>& area) {
   return this->getDirection();
-}
-
-enums::CollideResult actor::PassiveActor::collide(Actor& other) {
-  return other.collide(*this);
-}
-
-enums::CollideResult actor::PassiveActor::collide(ActiveActor& other) {
-  enums::CollideResult result = enums::FREE;
-  enums::ActorID this_id = this->getID();
-//  enums::ActorID other_id = other.getID();
-  if (this_id == enums::WALL_ID) {
-    result = enums::BARRIER;
-  } else if (this_id == enums::FLOOR_ID) {
-    result = enums::FREE;
-  }
-  return result;
-}
-
-enums::CollideResult actor::PassiveActor::collide(PassiveActor& other) {
-  return enums::BARRIER;
-}
-
-enums::CollideResult actor::PassiveActor::collide(SpellActor& other) {
-  enums::CollideResult result = enums::FREE;
-  enums::ActorID this_id = this->getID();
-  if (this_id == enums::WALL_ID) {
-    result = enums::BARRIER;
-  } else if ((this_id == enums::FLOOR_ID) or (this_id == enums::HP_POTION_ID) or (this_id == enums::MP_POTION_ID)) {
-    result = enums::FREE;
-  }
-  return result;
-}
-
-enums::CollideResult actor::PassiveActor::collide(CollectableActor& other) {
-  enums::CollideResult result = enums::FREE;
-  enums::ActorID this_id = this->getID();
-  if (this_id == enums::WALL_ID) {
-    result = enums::BARRIER;
-  } else if ((this_id == enums::FLOOR_ID) or (this_id == enums::HP_POTION_ID) or (this_id == enums::MP_POTION_ID)) {
-    result = enums::FREE;
-  }
-  return result;
-}
-
-enums::CollideResult actor::CollectableActor::collide(ActiveActor& other) {
-  enums::CollideResult result = enums::FREE;
-  enums::ActorID this_id = this->getID();
-  enums::ActorID other_id = other.getID();
-  if ((this_id == enums::HP_POTION_ID) or (this_id == enums::MP_POTION_ID)) {
-    if ((other_id == enums::HERO_ID) or (other_id == enums::PRINCESS_ID)) {
-      result = enums::PICK;
-    } else {
-      result = enums::FREE;
-    }
-  }
-  return result;
 }
 
 void actor::CollectableActor::setHealthPoints(int hp) {
@@ -265,34 +195,3 @@ void actor::CollectableActor::setManaPoints(int mp) {
 int actor::CollectableActor::getManaPoints() const {
   return mana_points_;
 }
-
-
-//std::shared_ptr<actor::ActiveActor> actor::ActiveActor::createActor(enums::ActorID id,
-//                                                                    config::Config& config,
-//                                                                    Point coord) {
-//  std::shared_ptr<actor::ActiveActor> actor_ptr;
-//
-//  switch (id) {
-//    case enums::ActorID::HERO_ID:
-//      actor_ptr = std::make_shared<actor::Hero>(actor::Hero(config.getHeroStat(), coord));
-//      break;
-//    case enums::ActorID::ZOMBIE_ID:
-//      actor_ptr = std::make_shared<actor::Zombie>(actor::Zombie(config.getZombieStat(), coord));
-//      break;
-//    case enums::ActorID::WALL_ID:
-//      actor_ptr = std::make_shared<actor::Wall>(actor::Wall(config.getWallStat(), coord));
-//      break;
-//    case enums::ActorID::PRINCESS_ID:
-//      actor_ptr = std::make_shared<actor::Princess>(actor::Princess(config.getPrincessStat(), coord));
-//      break;
-//    case enums::ActorID::DRAGON_ID:
-//      actor_ptr = std::make_shared<actor::Dragon>(actor::Dragon(config.getDragonStat(), coord));
-//      break;
-//    case enums::ActorID::NOTHING_ID:
-//      actor_ptr = nullptr;
-//      break;
-//    default:
-//      assert(false);
-//  }
-//  return actor_ptr;
-//}

@@ -15,10 +15,29 @@ class Hero : public actor::ActiveActor {
       : ActiveActor(position, is_dead, is_immortal, "Hero", enums::HERO_ID, live_symbol, dead_symbol,
                     max_hp, cur_hp, max_mp, cur_mp, dp, vp, lp, max_sp, cur_sp, sp_multiplier) {};
 
+  enums::CollideResult collide(Actor&) override;
   enums::CollideResult collide(ActiveActor&) override;
+  enums::CollideResult collide(actor::PassiveActor&) override;
+  enums::CollideResult collide(actor::SpellActor&) override;
+  enums::CollideResult collide(actor::CollectableActor&) override;
 
-  Point findTarget() override;
-  enums::CollideResult move() override;
+  Point findTarget(const std::vector<std::vector<std::shared_ptr<actor::Actor>>>&) override;
+  Event doTurn() override;
+
+  const std::vector<int> getStats() const;
+  const std::vector<bool>& getAchievements() const;
+
+  const int getHpPotionAmount() const;
+  const int getMpPotionAmount() const;
+ private:
+  int zombie_killed_ = 0;
+  int dragon_killed_ = 0;
+  int steps_made_ = 0;
+  int princess_rescued_ = 0;
+  std::vector<bool> achievements_;
+
+  int hp_potion_amount_ = 0;
+  int mp_potion_amount_ = 0;
 };
 
-
+//TODO: add inventory

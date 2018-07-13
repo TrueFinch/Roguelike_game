@@ -1,4 +1,5 @@
 {
   "Real-time": false,
-  "Fog_of_war": false
+  "Fog_of_war": false,
+  "halfdelay": 5
 }

@@ -4,68 +4,58 @@
 
 #include "Princess.h"
 
+enums::CollideResult Princess::collide(actor::Actor& other) {
+  return other.collide(*this);
+}
+
 enums::CollideResult Princess::collide(ActiveActor& other) {
-  enums::CollideResult result = enums::BARRIER;
+  enums::CollideResult result;
   enums::ActorID other_id = other.getID();
-  if ((other_id == enums::FIRE_BALL_ID) or (other_id == enums::ZOMBIE_ID) or (other_id == enums::DRAGON_ID)) {
-    result = enums::FIGHT;
-  } else if ((other.getIsDead()) or (other_id == enums::PRINCESS_ID)) {
-    result = enums::BARRIER;
-  } else if (other_id == enums::HERO_ID) {
+  if (other_id == enums::HERO_ID) {
     result = enums::WIN;
+  } else {
+    result = enums::BARRIER;
   }
   return result;
 }
 
-Point Princess::findTarget() {
-//  auto area = game_manager_.getArea();
-  return {(double) (rand() % 3 - 1), (double) (rand() % 3 - 1)};
+enums::CollideResult Princess::collide(actor::PassiveActor& other) {
+  return enums::BARRIER;
 }
 
-enums::CollideResult Princess::move() {
+Point Princess::findTarget(const std::vector<std::vector<std::shared_ptr<actor::Actor>>>& area) {
+  return {0, 0};
+}
+
+Event Princess::doTurn() {
+  Event result = {this->getName(), this->getName(), enums::DO_NOTHING, -1};
   Point princess_pos = this->getPosition();
-  auto area = game::GameManager::Instance().getArea();
-  Point dir = this->findTarget();
+  auto area = game::GameManager::Instance().getArea(princess_pos, this->visibility_points_);
+  Point dir = this->findTarget(area);
   Point other_pos = {princess_pos.x + dir.x, princess_pos.y + dir.y};
-  std::shared_ptr<actor::Actor> other = area[other_pos.x][other_pos.y]->top();
-  enums::CollideResult collision = this->collide(*this);
+  int row = (int) princess_pos.x, col = (int) princess_pos.y,
+      top_row_bound = row - std::min<int>(this->getVisibilityPoints(), row),
+      left_row_bound = col - std::min<int>(this->getVisibilityPoints(), col);
+  auto other = area[(int) other_pos.x - top_row_bound][(int) other_pos.y - left_row_bound];
+  enums::CollideResult collision = this->collide(*other);
 
   switch (collision) {
     case enums::BARRIER: {
       break;
     }
     case enums::FREE: {
-      game::GameManager::Instance().swap(princess_pos, other_pos);
       break;
     }
     case enums::FIGHT: {
-      std::shared_ptr<actor::ActiveActor> enemy = std::static_pointer_cast<actor::ActiveActor>(other);
-      enemy->setCurHealthPoints(enemy->getCurHealthPoints() - this->getDamagePoints());
-      this->setCurScorePoints(enemy->getLevelPoints() * enemy->getScorePointsMultiplier());
-      if (enemy->getIsDead()) {
-        game::GameManager::Instance().swap(princess_pos, other_pos);
-      } else {
-        this->setCurHealthPoints(this->getCurHealthPoints() - enemy->getDamagePoints());
-        enemy->setCurScorePoints(this->level_points_ * this->getScorePointsMultiplier());
-      }
       break;
     }
     case enums::WIN: {
-      //do nothing
-      //this case is unreachable for Princess too
       break;
     }
     case enums::PICK: {
-      if (other->getID() == enums::HP_POTION_ID) {
-        std::shared_ptr<actor::CollectableActor> potion = std::static_pointer_cast<actor::CollectableActor>(other);
-        this->setCurHealthPoints(this->getCurHealthPoints() + potion->getHealthPoints());
-      } else if (other->getID() == enums::MP_POTION_ID) {
-        std::shared_ptr<actor::CollectableActor> potion = std::static_pointer_cast<actor::CollectableActor>(other);
-        this->setCurManaPoints(this->getCurManaPoints() +  + potion->getManaPoints());
-      }
       break;
     }
   }
 
-  return collision;
+  return result;
 }

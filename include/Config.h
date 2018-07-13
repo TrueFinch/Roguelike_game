@@ -13,7 +13,7 @@ namespace config {
 class Config {
  public:
   static Config& Instance();
-  void init_actors(const std::string& path);
+  void initActors(const std::string& path);
   json getHero() const;
   json getZombie() const;
   json getDragon() const;
@@ -24,9 +24,14 @@ class Config {
   json getHealthPotion() const;
   json getManaPotion() const;
 
-  void init_ui(const std::string& path);
+  void initUI(const std::string& path);
   json getLoading() const;
   json getMainMenu() const;
+  json getPauseMenu() const;
+  json getSumUpMenu() const;
+
+  void initGameManager(const std::string& path);
+  json getGameManager() const;
  private:
   Config() = default;
   ~Config() = default;
@@ -45,6 +50,10 @@ class Config {
 
   json loading_;
   json main_menu_;
+  json pause_menu_;
+  json sum_up_menu_;
+
+  json game_manager_;
 };
 
 } // namespace config

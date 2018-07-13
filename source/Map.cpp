@@ -6,6 +6,8 @@
 #include <utility>
 #include <fstream>
 #include <cassert>
+#include <algorithm>
+#include <cmath>
 
 void map::Cell::push(std::shared_ptr<actor::Actor> actor) {
   this->actors_.push(actor);
@@ -14,7 +16,8 @@ void map::Cell::push(std::shared_ptr<actor::Actor> actor) {
 void map::Cell::pop() {
   this->actors_.pop();
 }
-std::shared_ptr<actor::Actor> map::Cell::top () const {
+
+std::shared_ptr<actor::Actor> map::Cell::top() const {
   return this->actors_.top();
 }
 
@@ -24,34 +27,12 @@ map::Map& map::Map::Instance() {
 }
 
 std::shared_ptr<std::vector<std::string>> map::Map::getMapView() const {
+  //TODO: add fog of war
   std::vector<std::string> map_view;
   for (const auto& row : this->board_) {
     map_view.emplace_back(std::string());
     for (const auto& cell : row) {
-      char c;
-     map_view[map_view.size() - 1].push_back(cell.top()->getLiveSymbol());
-//      switch ((cell.getPointer() == nullptr) ? (enums::NOTHING_ID) : (cell.getPointer()->sayID())) {
-//        case enums::ActorID::HERO_ID:
-//          c = std::dynamic_pointer_cast<actor::Hero>(cell.getPointer())->getUndeadSymbol();
-//          break;
-//        case enums::ActorID::ZOMBIE_ID:
-//          c = std::dynamic_pointer_cast<actor::Zombie>(cell.getPointer())->getUndeadSymbol();
-//          break;
-//        case enums::ActorID::WALL_ID:
-//          c = std::dynamic_pointer_cast<actor::Wall>(cell.getPointer())->getUndeadSymbol();
-//          break;
-//        case enums::ActorID::PRINCESS_ID:
-//          c = std::dynamic_pointer_cast<actor::Princess>(cell.getPointer())->getUndeadSymbol();
-//          break;
-//        case enums::ActorID::DRAGON_ID:
-//          c = std::dynamic_pointer_cast<actor::Dragon>(cell.getPointer())->getUndeadSymbol();
-//          break;
-//        case enums::ActorID::NOTHING_ID:
-//          c = '.';
-//          break;
-//        default:
-//          assert(false);
-//      }
+      char c = (cell.top()->isDead()) ? (cell.top()->getDeadSymbol()) : (cell.top()->getLiveSymbol());
       map_view[map_view.size() - 1].push_back(c);
     }
   }
@@ -60,11 +41,17 @@ std::shared_ptr<std::vector<std::string>> map::Map::getMapView() const {
 
 std::vector<std::vector<std::shared_ptr<actor::Actor>>> map::Map::getArea(const Point& coord, const int radius) const {
   std::vector<std::vector<std::shared_ptr<actor::Actor>>> area;
-  for (int i = 0; i < (2 * radius); ++i) {
+
+  int row = (int) coord.x, col = (int) coord.y,
+      top_row_bound = row - std::min<int>(radius, row),
+      bottom_row_bound = row + std::min<int>(radius, map::Map::Instance().rows_ - row - 1),
+      left_row_bound = col - std::min<int>(radius, col),
+      right_col_bound = col + std::min<int>(radius, map::Map::Instance().cols_ - col - 1);
+
+  for (int i = top_row_bound; i <= bottom_row_bound; ++i) {
     area.emplace_back(std::vector<std::shared_ptr<actor::Actor>>());
-    for (int j = 0; j < (2 * radius); ++j) {
-      area[area.size() - 1].push_back(board_[coord.x - radius + i][coord.y - radius + j].top());
-      area[area.size() - 1].push_back(board_[coord.x - radius + i][coord.y - radius + j].top());
+    for (int j = left_row_bound; j <= right_col_bound; ++j) {
+      area[area.size() - 1].push_back(board_[i][j].top());
     }
   }
   return area;
@@ -72,14 +59,18 @@ std::vector<std::vector<std::shared_ptr<actor::Actor>>> map::Map::getArea(const 
 
 void map::Map::loadMap(std::vector<enums::ActorID>& actors, std::vector<Point>& positions, const std::string& path) {
   std::ifstream fin(path);
-  int rows, cols;
-  fin >> rows >> cols;
+  fin >> rows_ >> cols_;
+  map::Map::Instance().rows_ = rows_;
+  map::Map::Instance().cols_ = cols_;
   std::string str;
-  for (int i = 0; i < rows; ++i) {
+  for (int i = 0; i < rows_; ++i) {
     fin >> str;
-    board_.emplace_back(std::vector<map::Cell>(static_cast<unsigned long>(cols)));
-    for (int j = 0; j < cols; ++j) {
-      auto actor_id = (enums::ActorID) str[j];
+    board_.emplace_back(std::vector<map::Cell>(static_cast<unsigned long>(cols_)));
+    for (int j = 0; j < cols_; ++j) {
+      auto actor_id = enums::FLOOR_ID;
+      actors.push_back(actor_id);
+      positions.emplace_back(i, j);
+      actor_id = (enums::ActorID) str[j];
       actors.push_back(actor_id);
       positions.emplace_back(i, j);
     }
@@ -92,12 +83,12 @@ void map::Map::addActorToCell(std::shared_ptr<actor::Actor> actor_ptr, const Poi
   board_[position.x][position.y].push(std::move(actor_ptr));
 }
 
-void map::Map::swap(Point a, Point b) {
-  std::shared_ptr<actor::Actor> tmp = this->board_[a.x][a.y].top();
+void map::Map::move(Point a, Point b) {
+  std::shared_ptr<actor::Actor> moved = this->board_[a.x][a.y].top();
   this->board_[a.x][a.y].pop();
-  this->board_[a.x][a.y].push(this->board_[b.x][b.y].top());
-  this->board_[b.x][b.y].pop();
-  this->board_[b.x][b.y].push(tmp);
+  this->board_[b.x][b.y].push(moved);
+
+  this->board_[b.x][b.y].top()->setPosition({b.x, b.y});
 }
 
 

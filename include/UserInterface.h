@@ -5,13 +5,14 @@
 #pragma once
 
 #include <ncurses.h>
-//#include <Screens.h>
 #include <Config.h>
 #include <Enums.h>
 #include <nlohmann/json.hpp>
 #include <MainMenu.h>
 #include <Loading.h>
 #include <GameField.h>
+#include <PauseMenu.h>
+#include <SumUpMenu.h>
 
 namespace ui {
 
@@ -21,7 +22,9 @@ class UserInterface {
   void init();
   enums::GameState update(enums::GameState game_state, int key);
   void updateMap(const std::shared_ptr<std::vector<std::string>>& map,
-                 const std::shared_ptr<actor::ActiveActor> hero_pos);
+                 std::shared_ptr<actor::ActiveActor> hero_pos,
+                 const int&,
+                 const int&);
  private:
   UserInterface() = default;
   ~UserInterface() = default;

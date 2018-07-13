@@ -11,7 +11,7 @@ config::Config& config::Config::Instance() {
   return self;
 }
 
-void config::Config::init_actors(const std::string& path) {
+void config::Config::initActors(const std::string& path) {
   std::ifstream fin("/home/truefinch/CLionProjects/Roguelike_game/configuration/config_level_1.json");
   json json_config;
   fin >> json_config;
@@ -81,7 +81,7 @@ json config::Config::getManaPotion() const {
   return mana_potion_;
 }
 
-void config::Config::init_ui(const std::string& path) {
+void config::Config::initUI(const std::string& path) {
   std::ifstream fin(path);
   json json_config;
   fin >> json_config;
@@ -92,8 +92,13 @@ void config::Config::init_ui(const std::string& path) {
       loading_ = ui_config;
     } else if (i.key() == "MainMenu") {
       main_menu_ = ui_config;
+    } else if (i.key() == "PauseMenu") {
+      pause_menu_ = ui_config;
+    } else if (i.key() == "SumUpMenu") {
+      sum_up_menu_ = ui_config;
     }
   }
+  fin.close();
 }
 
 json config::Config::getLoading() const {
@@ -103,4 +108,27 @@ json config::Config::getLoading() const {
 json config::Config::getMainMenu() const {
   return main_menu_;
 }
+
+json config::Config::getPauseMenu() const {
+  return pause_menu_;
+}
+
+void config::Config::initGameManager(const std::string& path) {
+  std::ifstream fin(path);
+  json json_config;
+  fin >> json_config;
+
+  game_manager_ = json_config;
+
+  fin.close();
+}
+
+json config::Config::getGameManager() const {
+  return game_manager_;
+}
+
+json config::Config::getSumUpMenu() const {
+  return sum_up_menu_;
+}
+
 

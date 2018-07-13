@@ -3,21 +3,22 @@
 //
 
 #include "Event.h"
+#include <utility>
 
-void Event::setExecutor(const std::shared_ptr<actor::ActiveActor>& ex) {
-  this->executor_ = ex;
+void Event::setExecutor(const std::string& ex) {
+  this->executor_name_ = ex;
 }
 
-std::shared_ptr<actor::ActiveActor> Event::getExecutor() const {
-  return executor_;
+std::string Event::getExecutor() const {
+  return executor_name_;
 }
 
-void Event::setTarget(const std::shared_ptr<actor::ActiveActor>& tr) {
-  this->target_ = tr;
+void Event::setTarget(const std::string& tr) {
+  this->target_name = tr;
 }
 
-std::shared_ptr<actor::ActiveActor> Event::getTarget() const {
-  return target_;
+std::string Event::getTarget() const {
+  return target_name;
 }
 
 void Event::setAction(const enums::TurnResult& action) {
@@ -35,3 +36,8 @@ void Event::setValue(const int& val) {
 int Event::getValue() const {
   return this->value_;
 }
+
+Event::Event(std::string executor_name,
+             std::string target_name,
+             enums::TurnResult action,
+             int value) : executor_name_{std::move(executor_name)}, target_name{std::move(target_name)}, action_{action}, value_{value} {}

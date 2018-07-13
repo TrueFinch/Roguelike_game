@@ -13,7 +13,9 @@ class Dragon : public actor::ActiveActor {
       : ActiveActor(position, is_dead, is_immortal, "Dragon", enums::DRAGON_ID, live_symbol, dead_symbol,
                     max_hp, cur_hp, max_mp, cur_mp, dp, vp, lp, max_sp, cur_sp, sp_multiplier) {};
 
-  enums::CollideResult collide(ActiveActor&) override;
-  Point findTarget() override;
-  enums::CollideResult move() override;
+  enums::CollideResult collide(actor::Actor&) override;
+  enums::CollideResult collide(actor::ActiveActor&) override;
+  enums::CollideResult collide(actor::PassiveActor&) override;
+  Point findTarget(const std::vector<std::vector<std::shared_ptr<actor::Actor>>>&) override;
+  Event doTurn() override;
 };

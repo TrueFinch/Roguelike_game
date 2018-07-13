@@ -3,23 +3,30 @@
 //
 #pragma once
 
-#include <Actors.h>
 #include <Point.h>
 #include <memory>
-#include <utility> #include <Enums.h>
+#include <utility>
+#include <Enums.h>
+
+class Event;
+
+namespace actor {
+class ActiveActor;
+}
 
 class Event {
  public:
-  Event(std::shared_ptr<actor::ActiveActor> executor,
-        std::shared_ptr<actor::ActiveActor> target,
+  Event() = default;
+  Event(std::string executor_name,
+        std::string target_name,
         enums::TurnResult action,
-        int value) : executor_{std::move(executor)}, target_{std::move(target)}, action_{action}, value_{value} {};
+        int value);
 
-  void setExecutor(const std::shared_ptr<actor::ActiveActor>&);
-  std::shared_ptr<actor::ActiveActor> getExecutor() const;
+  void setExecutor(const std::string&);
+  std::string getExecutor() const;
 
-  void setTarget(const std::shared_ptr<actor::ActiveActor>&);
-  std::shared_ptr<actor::ActiveActor> getTarget() const;
+  void setTarget(const std::string&);
+  std::string getTarget() const;
 
   void setAction(const enums::TurnResult&);
   enums::TurnResult getAction() const;
@@ -27,8 +34,8 @@ class Event {
   void setValue(const int&);
   int getValue() const;
  private:
-  std::shared_ptr<actor::ActiveActor> executor_;
-  std::shared_ptr<actor::ActiveActor> target_;
+  std::string executor_name_;
+  std::string target_name;
   enums::TurnResult action_;
   int value_;
 

@@ -1,13 +1,31 @@
 {
   "Loading": {
-    "greeting_": "WELCOME TO MY ROGUELIKE GAME",
-    "hint_": "Press ENTER to continue or ESCAPE to exit"
+    "greeting": "WELCOME TO MY ROGUELIKE GAME",
+    "hint": "Press ENTER to continue or ESCAPE to exit"
   },
   "MainMenu": {
-    "menu_items_": [
+    "menu_items": [
       "NEW GAME",
-      "SETTINGS",
+      "SCORE TABLE",
       "EXIT"
     ]
+  },
+  "PauseMenu": {
+    "menu_items": [
+      "CANCEL",
+      "EXIT"
+    ]
+  },
+  "SumUpMenu": {
+    "for_winner" : "YOU WON!!!",
+    "for_loser" : "YOU LOST.",
+    "top_text" : "Enter YOUR nickname (no more 12 signs): ",
+    "zombie" : "zombies killed ",
+    "dragon" : "dragons killed ",
+    "princess" : "princesses rescued ",
+    "level" : "level reached ",
+    "score" : "score points gained ",
+    "step" : "steps made ",
+    "achievement": "achievements got "
   }
 }

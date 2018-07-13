@@ -1,0 +1,4 @@
+Possible goals to do
+//TODO: medium screen after winning a level
+//TODO: saving configuration after victory
+//TODO: save the score of player and show it in main menu

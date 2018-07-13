@@ -21,7 +21,9 @@ enum ActorID {
 };
 //enum MoveEvent { MOVED = 0, NOT_MOVED, COLLIDE };
 
-enum CollideResult {FREE = 0, BARRIER, FIGHT, PICK, WIN};
+enum CollideResult { FREE = 0, BARRIER, FIGHT, PICK, WIN };
 
-enum GameState { LOADING = 0, MAIN_MENU, SETTINGS, EXIT, GAME_FIELD, PAUSE};
+enum TurnResult { WON = 0, DIED, DO_NOTHING, PICKED_UP, ATTACKED, DRANK, MOVED, ATE };
+
+enum GameState { LOADING = 0, MAIN_MENU, SETTINGS, EXIT, GAME_FIELD, PAUSE_MENU, SUM_UP_MENU };
 }; // namespace game_screen

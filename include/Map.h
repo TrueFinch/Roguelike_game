@@ -34,9 +34,10 @@ class Map {
   std::vector<std::vector<std::shared_ptr<actor::Actor>>> getArea(const Point& coord, int radius) const;
   std::shared_ptr<std::vector<std::string>> getMapView() const;
   void addActorToCell(std::shared_ptr<actor::Actor>, const Point&);
-  void swap(Point a, Point b);
+  void move(Point a, Point b);
   bool loaded = false;
  private:
+  int rows_, cols_;
   Map() = default;
   ~Map() = default;
 
