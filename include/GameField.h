@@ -15,7 +15,7 @@ class GameField {
  public:
  static GameField& Instance();
   enums::GameState update(int key);
-  void updateMap(const std::vector<std::string>&, const std::shared_ptr<actor::ActiveActor> hero_actor);
+  void updateMap(const std::vector<std::string>&, std::shared_ptr<actor::ActiveActor> hero_actor);
  private:
   GameField() = default;
   ~GameField() = default;
