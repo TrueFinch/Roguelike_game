@@ -5,7 +5,12 @@
 #include "Princess.h"
 
 enums::CollideResult Princess::collide(actor::Actor& other) {
-  return other.collide(*this);
+  enums::ActorID other_id = other.getID();
+  if (other_id == enums::HERO_ID) {
+    return enums::WIN;
+  } else {
+    return enums::BARRIER;
+  }
 }
 
 enums::CollideResult Princess::collide(ActiveActor& other) {

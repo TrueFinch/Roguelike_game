@@ -8,8 +8,24 @@
 #define KEY_1 49
 #define KEY_2 50
 
+#define KEY_W 119
+#define KEY_A 97
+#define KEY_S 115
+#define KEY_D 100
+
 enums::CollideResult Hero::collide(actor::Actor& other) {
-  return other.collide(*this);
+  enums::ActorID other_id = other.getID();
+  if ((other_id == enums::HP_POTION_ID) or (other_id == enums::MP_POTION_ID)) {
+    return enums::PICK;
+  } else if (other_id == enums::PRINCESS_ID) {
+    return enums::WIN;
+  } else if ((other_id == enums::DRAGON_ID) or (other_id == enums::ZOMBIE_ID) or (other_id == enums::FIRE_BALL_ID)) {
+    return enums::FIGHT;
+  } else if (other_id == enums::WALL_ID) {
+    return enums::BARRIER;
+  } else {
+    return enums::FREE;
+  }
 }
 
 enums::CollideResult Hero::collide(ActiveActor& other) {
@@ -90,6 +106,68 @@ Event Hero::doTurn() {
       left_row_bound = col - std::min<int>(this->getVisibilityPoints(), col);
   auto other = area[(int) other_pos.x - top_row_bound][(int) other_pos.y - left_row_bound];
   enums::CollideResult collision = this->collide(*other);
+
+  if (key == KEY_W) {
+    std::shared_ptr<actor::Actor> new_fireball =
+        factory::ActorFactory::Instance().CreateActor(enums::FIRE_BALL_ID,
+                                                      {hero_pos.x - 1, hero_pos.y},
+                                                      {-1, 0});
+    other = area[(int) hero_pos.x - 1 - top_row_bound][(int) hero_pos.y - left_row_bound];
+    collision = new_fireball->collide(*other);
+    if (collision == enums::FREE) {
+      auto cast_fireball = std::static_pointer_cast<actor::ActiveActor>(new_fireball);
+      if (this->getCurManaPoints() >= cast_fireball->getCurManaPoints()) {
+        game::GameManager::Instance().getActors().push_back(cast_fireball);
+        map::Map::Instance().addActorToCell(new_fireball, {hero_pos.x - 1, hero_pos.y});
+        this->setCurManaPoints(this->getCurManaPoints() - cast_fireball->getCurManaPoints());
+      }
+    }
+  } else if (key == KEY_A) {
+    std::shared_ptr<actor::Actor> new_fireball =
+        factory::ActorFactory::Instance().CreateActor(enums::FIRE_BALL_ID,
+                                                      {hero_pos.x, hero_pos.y - 1},
+                                                      {0, -1});
+    other = area[(int) hero_pos.x - top_row_bound][(int) hero_pos.y - 1 - left_row_bound];
+    collision = new_fireball->collide(*other);
+    if (collision == enums::FREE) {
+      auto cast_fireball = std::static_pointer_cast<actor::ActiveActor>(new_fireball);
+      if (this->getCurManaPoints() >= cast_fireball->getCurManaPoints()) {
+        game::GameManager::Instance().getActors().push_back(cast_fireball);
+        map::Map::Instance().addActorToCell(new_fireball, {hero_pos.x, hero_pos.y - 1});
+        this->setCurManaPoints(this->getCurManaPoints() - cast_fireball->getCurManaPoints());
+      }
+    }
+  } else if (key == KEY_S) {
+    std::shared_ptr<actor::Actor> new_fireball =
+        factory::ActorFactory::Instance().CreateActor(enums::FIRE_BALL_ID,
+                                                      {hero_pos.x + 1, hero_pos.y},
+                                                      {1, 0});
+    other = area[(int) hero_pos.x + 1 - top_row_bound][(int) hero_pos.y - left_row_bound];
+    collision = new_fireball->collide(*other);
+    if (collision == enums::FREE) {
+      auto cast_fireball = std::static_pointer_cast<actor::ActiveActor>(new_fireball);
+      if (this->getCurManaPoints() >= cast_fireball->getCurManaPoints()) {
+        game::GameManager::Instance().getActors().push_back(cast_fireball);
+        map::Map::Instance().addActorToCell(new_fireball, {hero_pos.x + 1, hero_pos.y});
+        this->setCurManaPoints(this->getCurManaPoints() - cast_fireball->getCurManaPoints());
+      }
+    }
+  } else if (key == KEY_D) {
+    std::shared_ptr<actor::Actor> new_fireball =
+        factory::ActorFactory::Instance().CreateActor(enums::FIRE_BALL_ID,
+                                                      {hero_pos.x, hero_pos.y + 1},
+                                                      {0, 1});
+    other = area[(int) hero_pos.x - top_row_bound][(int) hero_pos.y + 1 - left_row_bound];
+    collision = new_fireball->collide(*other);
+    if (collision == enums::FREE) {
+      auto cast_fireball = std::static_pointer_cast<actor::ActiveActor>(new_fireball);
+      if (this->getCurManaPoints() >= cast_fireball->getCurManaPoints()) {
+        game::GameManager::Instance().getActors().push_back(cast_fireball);
+        map::Map::Instance().addActorToCell(new_fireball, {hero_pos.x, hero_pos.y + 1});
+        this->setCurManaPoints(this->getCurManaPoints() - cast_fireball->getCurManaPoints());
+      }
+    }
+  }
 
   switch (collision) {
     case enums::BARRIER: {

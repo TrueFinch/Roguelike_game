@@ -97,7 +97,7 @@ SumUpMenu& SumUpMenu::Instance() {
 void SumUpMenu::saveUser(const int& score) const {
   std::ofstream fout;
   fout.open("/home/truefinch/CLionProjects/Roguelike_game/records/record_holders", std::ios_base::app);
-  fout << nickname_ << std::endl << score << std::endl;
+  fout << std::endl << nickname_ << std::endl << score << std::endl;
   for (int i = 0; i < achievements_.size(); ++i) {
     fout << achievements_[i] << ' ';
   }

@@ -5,7 +5,17 @@
 #include "Zombie.h"
 
 enums::CollideResult Zombie::collide(actor::Actor& other) {
-  return other.collide(*this);
+  enums::ActorID other_id = other.getID();
+  if (other.isDead()) {
+    return enums::PICK;
+  } else if ((other_id == enums::WALL_ID) or (other_id == enums::PRINCESS_ID) or (other_id == enums::DRAGON_ID)
+      or (other_id == enums::ZOMBIE_ID)) {
+    return enums::BARRIER;
+  } else if ((other_id == enums::HERO_ID) or (other_id == enums::FIRE_BALL_ID)) {
+    return enums::FIGHT;
+  } else {
+    return enums::FREE;
+  }
 }
 
 enums::CollideResult Zombie::collide(ActiveActor& other) {
@@ -68,6 +78,7 @@ Event Zombie::doTurn() {
       enemy->setCurHealthPoints(enemy->getCurHealthPoints() - this->getDamagePoints());
       if (enemy->isDead()) {
         this->setCurScorePoints(this->cur_score_points_ + enemy->getLevelPoints() * enemy->getScorePointsMultiplier());
+        result = Event(this->getName(), enemy->getName(), enums::DIED, this->getDamagePoints());
         game::GameManager::Instance().move(zombie_pos, other_pos);
       }
       result = {this->getName(), enemy->getName(), enums::ATTACKED, this->getDamagePoints()};

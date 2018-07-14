@@ -112,7 +112,6 @@ void MapGenerator::addActors() {
   mapGenerator.map_[hero_pos.x][hero_pos.y] = '@';
   mapGenerator.map_[princess_pos.x][princess_pos.y] = 'P';
 
-  //TODO: compress all those cycles to only one (use a cycle by the array of actor symbols
   std::vector<char> actors_symbols(4);
   actors_symbols[0] = 'Z';
   actors_symbols[1] = 'D';
@@ -184,11 +183,11 @@ bool MapGenerator::checkReach(const Point& a, const Point& b) {
   return (visited[a.x][a.y]) and (visited[b.x][b.y]);
 }
 
-void MapGenerator::saveMap() {
+void MapGenerator::saveMap(const std::string& path) {
   MapGenerator& mapGenerator = MapGenerator::Instance();
 
   std::ofstream map_file;
-  map_file.open("/home/truefinch/CLionProjects/Roguelike_game/map/level");
+  map_file.open(path);
   map_file << mapGenerator.map_rows_ << std::endl << mapGenerator.map_cols_ << std::endl;
   for (int i = 0; i < mapGenerator.map_rows_; ++i) {
     map_file << mapGenerator.map_[i] << std::endl;

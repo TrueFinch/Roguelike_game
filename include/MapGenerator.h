@@ -19,7 +19,7 @@ class MapGenerator {
   void fillCanvas();
   void readTiles();
   void addActors();
-  void saveMap();
+  void saveMap(const std::string&);
   bool checkReach(const Point& a, const Point& b);
 
   std::vector<std::vector<int>>& getCanvas() const;
@@ -30,12 +30,10 @@ class MapGenerator {
   ~MapGenerator() = default;
 
   MapGenerator(MapGenerator const&) = delete;
-  MapGenerator& operator= (MapGenerator const&) = delete;
+  MapGenerator& operator=(MapGenerator const&) = delete;
 
   std::vector<std::vector<int>> canvas_;
   std::vector<std::string> map_;
   std::vector<std::vector<std::string>> tiles_;
   int canvas_rows_ = 0, canvas_cols_ = 0, map_rows_ = 0, map_cols_ = 0, tile_rows_ = 0, tile_cols_ = 0;
 };
-
-

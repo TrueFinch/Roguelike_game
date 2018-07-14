@@ -10,7 +10,6 @@
 #include <memory>
 #include <Actors.h>
 
-
 namespace map {
 
 class Cell;
@@ -22,7 +21,7 @@ class Cell {
   Cell() = default;
   void push(std::shared_ptr<actor::Actor>);
   void pop();
-  std::shared_ptr<actor::Actor> top () const;
+  std::shared_ptr<actor::Actor> top() const;
  private:
   std::stack<std::shared_ptr<actor::Actor>> actors_;
 };
@@ -42,7 +41,7 @@ class Map {
   ~Map() = default;
 
   Map(Map const&) = delete;
-  Map& operator= (Map const&) = delete;
+  Map& operator=(Map const&) = delete;
   std::vector<std::vector<map::Cell>> board_;
 };
 

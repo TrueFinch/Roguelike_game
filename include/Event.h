@@ -36,7 +36,7 @@ class Event {
  private:
   std::string executor_name_;
   std::string target_name;
-  enums::TurnResult action_;
+  enums::TurnResult action_ = enums::DIED;
   int value_;
 
 };

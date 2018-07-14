@@ -142,9 +142,9 @@ void actor::ActiveActor::setLevelPoints(int lp) {
 
 void actor::ActiveActor::setCurScorePoints(int sp) {
   cur_score_points_ = sp;
-  while (cur_score_points_ >= max_score_points_) {
-    this->upLevelPoints();
+  while (cur_score_points_ > max_score_points_) {
     cur_score_points_ -= max_score_points_;
+    this->upLevelPoints();
   }
 }
 

@@ -3,6 +3,7 @@
 //
 #pragma once
 
+#include <MapGenerator.h>
 #include <UserInterface.h>
 #include <Event.h>
 #include <Actors.h>
@@ -23,6 +24,7 @@ class GameManager {
   int getLastPressedKey() const;
   void move(const Point& a, const Point& b) const;
   void loadMap() const;
+  std::vector<std::shared_ptr<actor::ActiveActor>>& getActors();
  private:
   GameManager() = default;
   ~GameManager() = default;
@@ -36,6 +38,10 @@ class GameManager {
 
   int rows_ = 0, cols_ = 0, halfdelay_ = 1;
   bool real_time_ = false, fog_of_war_ = false;
+  int map_generator_canvas_height_;
+  int map_generator_canvas_width_;
+  std::string path_to_saved_map_;
+  std::string path_to_ui_config_;
 
 };
 

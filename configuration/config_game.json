@@ -1,5 +1,9 @@
 {
-  "Real-time": false,
+  "Real-time": true,
   "Fog_of_war": false,
-  "halfdelay": 5
+  "halfdelay": 5,
+  "map_generator_canvas_height" : 25,
+  "map_generator_canvas_width" : 30,
+  "path_to_save_map" : "/home/truefinch/CLionProjects/Roguelike_game/map/level",
+  "path_to_ui_config" : "/home/truefinch/CLionProjects/Roguelike_game/configuration/config_interface.json"
 }
